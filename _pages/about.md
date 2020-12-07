@@ -6,7 +6,7 @@ description: Read more. Think more. Do more.
 
 profile:
   align: right
-  image: profile.JPG
+  image: profile.jpeg
 
 news: false  # includes a list of news items
 selected_papers: true # includes a list of papers marked as "selected={true}"
