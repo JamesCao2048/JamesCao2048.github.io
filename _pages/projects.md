@@ -3,7 +3,8 @@ layout: page
 title: projects
 permalink: /projects/
 description: A growing collection of your cool projects.
-nav: true
+# TODO: 将nav设置成true，这样在header中才会显示
+nav: false 
 ---
 
 <div class="projects grid">

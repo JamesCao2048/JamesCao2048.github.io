@@ -9,7 +9,6 @@ last_name: Cao
 email: junmingcao@sjtu.edu.cn
 footer_text: >
   Powered by <a href="http://jekyllrb.com/" target="_blank">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio">al-folio</a> theme.
-  Hosted by <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>.
 
 url:  # the base hostname & protocol for your site
 baseurl: / # the subpath of your site, e.g. /blog/
@@ -56,8 +55,8 @@ google_analytics: UA-XXXXXXXXX # out your google-analytics code
 # Blog
 # -----------------------------------------------------------------------------
 
-blog_name: al-folio  # your blog must have a name for it to show up in the nav bar
-blog_description: a simple whitespace theme for academics
+blog_name:   My Blogs # your blog must have a name for it to show up in the nav bar
+blog_description: To be released
 permalink: /blog/:year/:title/
 
 # Pagination
