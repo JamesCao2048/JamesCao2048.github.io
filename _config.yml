@@ -2,7 +2,7 @@
 # Site settings
 # -----------------------------------------------------------------------------
 
-title: about # the website title (if blank, full name will be used instead)
+title: blank # the website title (if blank, full name will be used instead)
 first_name: Junming
 # middle_name: R.
 last_name: Cao
@@ -55,7 +55,7 @@ google_analytics: UA-XXXXXXXXX # out your google-analytics code
 # Blog
 # -----------------------------------------------------------------------------
 
-blog_name:   My Blogs # your blog must have a name for it to show up in the nav bar
+blog_name:  My Blogs # your blog must have a name for it to show up in the nav bar
 blog_description: To be released
 permalink: /blog/:year/:title/
 
