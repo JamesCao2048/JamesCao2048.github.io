@@ -1,7 +1,1 @@
 _site
-.sass-cache
-.jekyll-metadata
-.DS_store
-.ruby-version
-Gemfile.lock
-.tweet-cache/

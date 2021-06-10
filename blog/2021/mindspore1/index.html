@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<title>Junming  Cao | MindSpore源码阅读系列(一)：本地编译API文档并导入Dash</title>
+<meta name="description" content="Personal website">
+
+<!-- Open Graph -->
+
+
+<!-- Bootstrap & MDB -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" integrity="sha512-MoRNloxbStBcD8z3M/2BmnT+rg4IsMxPkXaGh2zD6LGNNFE80W3onsAhRcMAMrSoyWL9xD7Ert0men7vR8LUZg==" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" integrity="sha512-RO38pBRxYH3SoOprtPTD86JFOclM51/XTIdEPh5j8sj4tp8jmQIx26twG52UaLi//hQldfrh7e51WzP9wuP32Q==" crossorigin="anonymous" />
+
+<!-- Fonts & Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"  integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.0/css/academicons.min.css" integrity="sha512-W4yqoT1+8NLkinBLBZko+dFB2ZbHsYLDdr50VElllRcNt2Q4/GSs6u71UHKxB7S6JEMCp5Ve4xjh3eGQl/HRvg==" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons">
+
+<!-- Code Syntax Highlighting -->
+<link rel="stylesheet" href="https://gitcdn.link/repo/jwarby/jekyll-pygments-themes/master/github.css" />
+
+<!-- Styles -->
+<link rel="shortcut icon" href="/assets/img/favicon.ico">
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<link rel="canonical" href="/blog/2021/mindspore1/">
+
+<!-- Theming-->
+
+
+
+
+    
+<!-- MathJax -->
+<script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js"></script>
+<script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+  </head>
+
+  <body class="fixed-top-nav ">
+
+    <!-- Header -->
+
+    <header>
+
+    <!-- Nav Bar -->
+    <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top">
+    <div class="container">
+      
+      <a class="navbar-brand title font-weight-lighter" href="http://localhost:4000/">
+       <span class="font-weight-bold">Junming</span>   Cao
+      </a>
+      
+      <!-- Navbar Toogle -->
+      <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar top-bar"></span>
+        <span class="icon-bar middle-bar"></span>
+        <span class="icon-bar bottom-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse text-right" id="navbarNav">
+        <ul class="navbar-nav ml-auto flex-nowrap">
+          <!-- About -->
+          <li class="nav-item ">
+            <a class="nav-link" href="/">
+              About
+              
+            </a>
+          </li>
+          
+          <!-- Blog -->
+          <li class="nav-item active">
+            <a class="nav-link" href="/blog/">
+              Blog
+              
+            </a>
+          </li>
+          
+          <!-- Other pages -->
+          
+          
+          
+          
+          
+          
+          
+          <li class="nav-item ">
+              <a class="nav-link" href="/publications/">
+                Publications
+                
+              </a>
+          </li>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+</header>
+
+
+    <!-- Content -->
+
+    <div class="container mt-5">
+      
+
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">MindSpore源码阅读系列(一)：本地编译API文档并导入Dash</h1>
+    <p class="post-meta">June 10, 2021</p>
+  </header>
+
+  <article class="post-content">
+    <h2 id="前言">前言</h2>
+<p>我前几天报名参加了第四届中国软件开源创新大赛的<a href="https://www.educoder.net/competitions/index/gcc-annotation-2021">代码评注组</a>。代码评注组的比赛形式是让参赛者阅读指定开源软件的源码，并根据自己的理解撰写技术博客。大赛提供了三种可选择阅读的开源软件：MindSpore、OpenGauss、OpenHarmony。OpenGauss和OpenHarmony就是大名鼎鼎的高斯数据库和鸿蒙操作系统，而MindSpore当然也不同凡响，是华为于2020年推出的<strong>面向全场景</strong>的<strong>最佳昇(sheng)腾匹配</strong>的AI框架。我最近在做深度学习性能缺陷的研究，对各种深度学习系统的实现比较感兴趣，所以选择进行MindSpore的源码阅读与评注。</p>
+
+<h2 id="mindspore让我感兴趣的点">MindSpore让我感兴趣的点</h2>
+<p>我希望有一些比较具体的目标，这样更有针对性。粗略浏览了一下官网的文档介绍，我发现了如下让我感兴趣的点：</p>
+<ul>
+  <li>MindSpore是<a href="https://www.mindspore.cn/tutorial/zh-CN/r1.2/introduction.html">华为AI全栈</a>的重要组件，它号称是最佳昇腾匹配的AI框架。那它底层针对异构计算架构(CANN)、昇腾处理器具体做了哪些定制优化？</li>
+  <li>MindSpore主打全场景，而且还有MindRE(全场景运行时)，支持端、边、云不同场景下的灵活部署。这种灵活性是如何实现的？计算资源受限的情况下，对模型的裁剪、压缩等技术相比于Tensorflow有何优劣？</li>
+  <li>MindSpore的自动微分不同于基于静态图和动态图的转换，而是<a href="https://gitee.com/mindspore/mindspore#%E8%87%AA%E5%8A%A8%E5%BE%AE%E5%88%86">基于源码的转换</a>。一方面它可以像动态图一样轻松构建与调试模型，一方面可以对神经网络进行静态编译与优化。它具体是如何实现的？相比于Tensorflow 2.0的默认Eager执行，Pytorch最近推出的torchscript，它在易用性、执行效率方面有何区别？</li>
+  <li>MindSpore有一个独立的<a href="https://www.mindspore.cn/tutorial/training/zh-CN/r1.2/advanced_use/improve_model_security_nad.html">MindArmour库</a>，它参考最新的深度学习安全与软工研究，为模型提供各种安全防护能力。我对其中的NAD算法，fuzz testing尤其感兴趣。</li>
+  <li>MindSpore提供了详细的调试网络的<a href="https://www.mindspore.cn/tutorial/training/zh-CN/r1.2/advanced_use/debug_in_pynative_mode.html">文档</a>。其中Dump功能可以在Graph模式下调试，同时可以使用Callback自定义调试信息，能否利用这些功能静态或动态分析计算图，从而自动检测与修复缺陷？</li>
+  <li>华为AI全栈中还包括全流程开发IDE <a href="https://www.hiascend.com/software/mindstudio">MindStudio</a>，它提供了一些AI应用开发特定的补全与分析功能。我对它提供的<a href="https://support.huaweicloud.com/usermanual-mindstudio301/atlasms_02_0624.html">调优分析</a>功能很感兴趣。在检测MindSpore或Tensorflow应用的性能问题时，它相比于Tensorflow profiler，效果如何？除了单纯的profiling找bottleneck外，它实现了哪些智能分析技术，可以自动定位到性能缺陷的roor cause？</li>
+</ul>
+
+<p>在后续的阅读学习过程中，我将尝试找出这些问题的答案并进行分享。
+开始阅读源码之前，我还要进行一些准备工作，首先是将文档进行本地编译。</p>
+
+<h2 id="为什么要本地编译api文档">为什么要本地编译API文档</h2>
+<p>相比于在线查询，将文档离线编译有如下两点好处：</p>
+<ul>
+  <li>方便离线查看。当API文档需要科学上网访问，或网络环境不好时，离线查看能省却很多麻烦。</li>
+  <li>可以导入<strong>API文档管理工具</strong>。强烈建议不太了解API文档管理工具的同学了解一下，绝对是解放记忆负担，提高生产力的神器。Mac平台的<a href="https://www.zhihu.com/question/25223058">Dash</a>是让我离不开Mac的重要原因之一，如果有同学知道Windows、Linux平台类似的API文档管理工具，欢迎分享。</li>
+</ul>
+
+<h3 id="dash使用简介">Dash使用简介：</h3>
+<p>下载安装后打开设置，搜索需要安装的API库，并点击下载。Dash支持数十种编程语言的标准库文档，与数百个常见第三方库文档。其中Main Docsets是官方提供的，User Contributed则有一些用户自定义，然后提供给社区的。</p>
+<div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded z-depth-1" src="/assets/img/ms/1/dash_install.png" />
+</div>
+<p>在搜索框里搜索模块名/类名/方法名/字段名，可以提前选中某个库，也可以针对所有库搜索。</p>
+<div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded z-depth-1" src="/assets/img/ms/1/dash_search.png" />
+</div>
+<p>点击指定的搜索结果，会跳到对应的API页面。API页面都是经过Dash索引过的，一般会在左侧生成方便的目录。</p>
+<div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded z-depth-1" src="/assets/img/ms/1/dash_view.png" />
+</div>
+
+<p>常见的深度学习库，如Tensorflow、Pytorch、Keras、MXNET等都在Dash中有用户贡献的现成文档可以下载使用，但是MindSpore却没有。因此想要在Dash中搜索MindSpore文档，就必须对MindSpore文档进行本地编译为sphinx格式后，使用<a href="https://github.com/Kapeli/Dash-User-Contributions#contribute-a-new-docset">doc2dash</a>导入。
+下面将依次介绍本地编译MindSpore Python API文档和将文档导入Dash的步骤。</p>
+<h3 id="mindspore文档本地编译">MindSpore文档本地编译</h3>
+
+<h4 id="安装mindspore">安装MindSpore</h4>
+<p>由于<a href="https://gitee.com/mindspore/docs">MindSpore Docs</a>的编译依赖于MindSpore，MindSporeHub，MindArmour，MindSporeServing，因此要先安装这些库。
+这里介绍最常用的GPU版本MindSpore的安装，需要注意GPU版本的MindSpore目前只支持Ubuntu系统。因为GPU版本安装起来比较麻烦，因此直接安装<a href="https://www.mindspore.cn/install/">Docker镜像</a>。</p>
+
+<p>Docker使用GPU，需要首先安装nvidia-container-toolkit:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># Acquire version of operating system version</span>
+<span class="nv">DISTRIBUTION</span><span class="o">=</span><span class="si">$(</span><span class="nb">.</span> /etc/os-release<span class="p">;</span> <span class="nb">echo</span> <span class="nv">$ID$VERSION_ID</span><span class="si">)</span>
+curl <span class="nt">-s</span> <span class="nt">-L</span> https://nvidia.github.io/nvidia-docker/gpgkey | apt-key add -
+curl <span class="nt">-s</span> <span class="nt">-L</span> https://nvidia.github.io/nvidia-docker/<span class="nv">$DISTRIBUTION</span>/nvidia-docker.list | <span class="nb">tee</span> /etc/apt/sources.list.d/nvidia-docker.list
+
+<span class="nb">sudo </span>apt-get update <span class="o">&amp;&amp;</span> <span class="nb">sudo </span>apt-get <span class="nb">install</span> <span class="nt">-y</span> nvidia-container-toolkit nvidia-docker2
+<span class="nb">sudo </span>systemctl restart docker</code></pre></figure>
+
+<p>编辑文件daemon.json配置容器运行时，让Docker可以使用nvidia-container-runtime:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">vim /etc/docker/daemon.json
+<span class="c">#添加如下字段：</span>
+<span class="o">{</span>
+    <span class="s2">"runtimes"</span>: <span class="o">{</span>
+        <span class="s2">"nvidia"</span>: <span class="o">{</span>
+            <span class="s2">"path"</span>: <span class="s2">"nvidia-container-runtime"</span>,
+            <span class="s2">"runtimeArgs"</span>: <span class="o">[]</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>重启Docker:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">sudo </span>systemctl daemon-reload
+<span class="nb">sudo </span>systemctl restart docker</code></pre></figure>
+
+<p>拉取MindSpore的docker image，然后run:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">docker pull swr.cn-south-1.myhuaweicloud.com/mindspore/mindspore-gpu:1.2.0
+docker run <span class="nt">-it</span> <span class="nt">-v</span> /dev/shm:/dev/shm <span class="nt">--runtime</span><span class="o">=</span>nvidia <span class="nt">--privileged</span><span class="o">=</span><span class="nb">true </span>swr.cn-south-1.myhuaweicloud.com/mindspore/mindspore-gpu:1.2.0 /bin/bash/</code></pre></figure>
+
+<p>进入docker中，安装MindSporeHub，MindArmour，和MindSporeServing：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">wget https://ms-release.obs.cn-north-4.myhuaweicloud.com/1.2.0/Hub/any/mindspore_hub-1.2.0-py3-none-any.whl
+wget https://ms-release.obs.cn-north-4.myhuaweicloud.com/1.2.0/Serving/ubuntu_x86/mindspore_serving-1.2.0-cp37-cp37m-linux_x86_64.whl
+pip <span class="nb">install </span>mindspore_hub-1.2.0-py3-none-any.whl
+pip <span class="nb">install </span>https://ms-release.obs.cn-north-4.myhuaweicloud.com/1.2.0/MindArmour/x86_64/mindarmour-1.2.0-cp37-cp37m-linux_x86_64.whl <span class="nt">--trusted-host</span> ms-release.obs.cn-north-4.myhuaweicloud.com <span class="nt">-i</span> https://pypi.tuna.tsinghua.edu.cn/simple
+pip <span class="nb">install </span>mindspore_serving-1.2.0-cp37-cp37m-linux_x86_64.whl</code></pre></figure>
+
+<h4 id="编译mindspore-docs">编译MindSpore Docs</h4>
+<p>在docker中执行以下命令：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">git pull https://gitee.com/mindspore/docs.git
+<span class="nb">cd </span>docs/docs/api_python
+pip <span class="nb">install</span> <span class="nt">-r</span> requirements
+make html</code></pre></figure>
+
+<p>却报错：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">/bin/sh: sphinx-build: <span class="nb">command </span>not found</code></pre></figure>
+
+<p>经过<del>一番艰难的</del>排查发现是pip安装的sphinx二进制文件没有加到Path中，因此执行：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">echo</span> <span class="s1">'export PATH=$PATH:/usr/local/python-3.7.5/bin/'</span> <span class="o">&gt;&gt;</span> ~/.bashrc
+<span class="nb">source</span> ~/.bashrc
+make html</code></pre></figure>
+
+<p>这样就编译成功啦，生成的文档输出在./build_en/html目录下</p>
+<h3 id="将文档导入dash">将文档导入Dash</h3>
+<p>这一步建议在Mac环境下执行，因为doc2dash依赖的sphinx版本与MindSpore docs不一致，直接在上面的docker里安装并运行doc2dash，会报错。</p>
+
+<p>首先将上一步输出的html文件夹拷贝到mac里，并且在mac里执行以下命令:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">pip <span class="nb">install </span>doc2dash
+doc2dash <span class="nt">-n</span> MindSpore <span class="nt">-A</span> html/</code></pre></figure>
+
+<p>这样就将MindSpore的文档安装到Dash中啦！</p>
+<div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded z-depth-1" src="/assets/img/ms/1/dash_ms.png" />
+</div>
+
+<p>后面我计划将编译完成的MindSpore文档提交给Dash社区，这样其他同学就能直接在Dash偏好设置界面搜索到MindSpore，然后直接下载安装了。</p>
+
+<h2 id="下期预告">下期预告</h2>
+<p>计划下期还是源码阅读的准备工作，主要包括：</p>
+<ul>
+  <li>MindSpore中哪些模块/包是Python实现的，哪些是C++实现的，它是如何使用Cmake进行Python与C++的混合编译的？</li>
+  <li>修改MindSpore源码后，如何编译并安装到本机，然后能够被自己的代码使用。</li>
+  <li>运行样例代码或MindSpore提供的测试用例，在Python及C++中如何设置断点执行，查看程序运行状态。</li>
+</ul>
+
+<p>最后吐槽一下MindSpore没有mac版(连windows都有MindSpore CPU版了)，这样就没法将源码安装到笔记本上查看源码了。虽然现在能通过VS Code远程连服务器查看，而且最新的pylance language server的性能飞起，但是网络状况不好的时候就没办法了。</p>
+
+  </article>
+
+  
+
+</div>
+
+    </div>
+
+    <!-- Footer -->
+
+    
+<footer class="fixed-bottom">
+  <div class="container mt-0">
+    &copy; Copyright 2021 Junming  Cao.
+    Powered by <a href="http://jekyllrb.com/" target="_blank">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio">al-folio</a> theme.
+
+    
+    Last updated: June 10, 2021.
+    
+  </div>
+</footer>
+
+
+
+  </body>
+
+  <!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+
+  <!-- Bootsrap & MDB scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.4.4/umd/popper.min.js" integrity="sha512-eUQ9hGdLjBjY3F41CScH3UX+4JDSI9zXeroz7hJ+RteoCaY+GP/LDoM8AO+Pt+DRFw3nXqsjh9Zsts8hnYv8/A==" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha512-M5KW3ztuIICmVIhjSqXe01oV2bpe248gOxqmlcYrEzAvws7Pw3z6BK0iGbrwvdrUQUhi3eXgtxp5I8PDo9YfjQ==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js" integrity="sha512-Mug9KHKmroQFMLm93zGrjhibM2z2Obg9l6qFG2qKjXEXkMp/VDkI4uju9m4QKPjWSwQ6O2qzZEnJDEeCw0Blcw==" crossorigin="anonymous"></script>
+
+  
+<!-- Mansory & imagesLoaded -->
+<script defer src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script defer src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+<script defer src="/assets/js/mansory.js" type="text/javascript"></script>
+
+
+  
+
+
+<!-- Load Common JS -->
+<script src="/assets/js/common.js"></script>
+
+<!-- Load DarkMode JS -->
+<script src="/assets/js/dark_mode.js"></script>
+
+
+</html>
