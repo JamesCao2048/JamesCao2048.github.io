@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+<title>Junming  Cao | MindSpore源码阅读系列(二)：编译并调试MindSpore源码</title>
+<meta name="description" content="Personal website">
+
+<!-- Open Graph -->
+
+
+<!-- Bootstrap & MDB -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" integrity="sha512-MoRNloxbStBcD8z3M/2BmnT+rg4IsMxPkXaGh2zD6LGNNFE80W3onsAhRcMAMrSoyWL9xD7Ert0men7vR8LUZg==" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/css/mdb.min.css" integrity="sha512-RO38pBRxYH3SoOprtPTD86JFOclM51/XTIdEPh5j8sj4tp8jmQIx26twG52UaLi//hQldfrh7e51WzP9wuP32Q==" crossorigin="anonymous" />
+
+<!-- Fonts & Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"  integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.9.0/css/academicons.min.css" integrity="sha512-W4yqoT1+8NLkinBLBZko+dFB2ZbHsYLDdr50VElllRcNt2Q4/GSs6u71UHKxB7S6JEMCp5Ve4xjh3eGQl/HRvg==" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons">
+
+<!-- Code Syntax Highlighting -->
+<link rel="stylesheet" href="https://gitcdn.link/repo/jwarby/jekyll-pygments-themes/master/github.css" />
+
+<!-- Styles -->
+<link rel="shortcut icon" href="/assets/img/favicon.ico">
+<link rel="stylesheet" href="/assets/css/main.css">
+
+<link rel="canonical" href="/blog/2021/mindspore2/">
+
+<!-- Theming-->
+
+
+
+
+    
+<!-- MathJax -->
+<script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.1.2/es5/tex-mml-chtml.js"></script>
+<script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+
+  </head>
+
+  <body class="fixed-top-nav ">
+
+    <!-- Header -->
+
+    <header>
+
+    <!-- Nav Bar -->
+    <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top">
+    <div class="container">
+      
+      <a class="navbar-brand title font-weight-lighter" href="http://localhost:4000/">
+       <span class="font-weight-bold">Junming</span>   Cao
+      </a>
+      
+      <!-- Navbar Toogle -->
+      <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar top-bar"></span>
+        <span class="icon-bar middle-bar"></span>
+        <span class="icon-bar bottom-bar"></span>
+      </button>
+      <div class="collapse navbar-collapse text-right" id="navbarNav">
+        <ul class="navbar-nav ml-auto flex-nowrap">
+          <!-- About -->
+          <li class="nav-item ">
+            <a class="nav-link" href="/">
+              About
+              
+            </a>
+          </li>
+          
+          <!-- Blog -->
+          <li class="nav-item active">
+            <a class="nav-link" href="/blog/">
+              Blog
+              
+            </a>
+          </li>
+          
+          <!-- Other pages -->
+          
+          
+          
+          
+          
+          
+          
+          <li class="nav-item ">
+              <a class="nav-link" href="/publications/">
+                Publications
+                
+              </a>
+          </li>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+</header>
+
+
+    <!-- Content -->
+
+    <div class="container mt-5">
+      
+
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">MindSpore源码阅读系列(二)：编译并调试MindSpore源码</h1>
+    <p class="post-meta">June 24, 2021</p>
+  </header>
+
+  <article class="post-content">
+    <h2 id="前言">前言</h2>
+<p>往期回顾: <a href="https://jamescao2048.github.io/blog/2021/mindspore1/">MindSpore源码阅读系列(一)：本地编译API文档并导入Dash</a></p>
+
+<p>今天我将介绍如何编译并调试MindSpore源码，这对于我们有效地阅读源码非常重要。可编译的环境会让IDE具有<strong>代码跳转、提示</strong>等功能，而调试代码可以让我们通过设置断点的方式捕获程序动态运行的信息，如<strong>局部/全局变量、函数调用栈</strong>等。
+这次的内容比较丰富，主要包括：</p>
+<ul>
+  <li><a href="#test">调试Python代码</a>
+    <ul>
+      <li><a href="#测试">阅读MindSpore的Python实现</a></li>
+      <li><a href="###调试MindSpore的Python实现">调试MindSpore的Python实现</a></li>
+    </ul>
+  </li>
+  <li><a href="##调试python代码">源码编译概览</a>
+    <ul>
+      <li><a href="###编译流程">编译流程</a></li>
+      <li><a href="###编译脚本(可跳过)">编译脚本(可跳过)</a></li>
+    </ul>
+  </li>
+  <li><a href="##调试C++代码">调试C++代码</a>
+    <ul>
+      <li><a href="###gdb调试(可跳过)">gdb调试(可跳过)</a></li>
+      <li><a href="###VS Code调试(重要)">VS Code调试(重要)</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="调试python代码">调试Python代码</h2>
+<h3 id="阅读mindspore的python实现">阅读MindSpore的Python实现</h3>
+<p>由于Python没有编译环节，安装库也只是将库的源码拷贝到指定目录，所以我们可以直接在MindSpore的生产环境调试Python。
+使用docker可以方便地安装：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">docker run <span class="nt">-it</span> <span class="nt">--runtime</span><span class="o">=</span>nvidia <span class="nt">--privileged</span><span class="o">=</span><span class="nb">true </span>swr.cn-south-1.myhuaweicloud.com/mindspore/mindspore-gpu:1.2.0</code></pre></figure>
+
+<p>使用IDE阅读Python库的源码非常容易，例如在上述docker中建立文件，写入如下测试代码：</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="c1"># test_transpose.py
+</span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">mindspore.context</span> <span class="k">as</span> <span class="n">context</span>
+<span class="kn">import</span> <span class="nn">mindspore.ops</span> <span class="k">as</span> <span class="n">ops</span>
+<span class="kn">import</span> <span class="nn">mindspore</span> <span class="k">as</span> <span class="n">ms</span>
+
+<span class="n">context</span><span class="p">.</span><span class="n">set_context</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">context</span><span class="p">.</span><span class="n">PYNATIVE_MODE</span><span class="p">,</span> <span class="n">device_target</span><span class="o">=</span><span class="s">"GPU"</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">ms</span><span class="p">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="mi">3</span><span class="p">).</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">).</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">float32</span><span class="p">))</span>
+<span class="n">transpose_op</span> <span class="o">=</span> <span class="n">ops</span><span class="p">.</span><span class="n">Transpose</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">transpose_op</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)))</span></code></pre></figure>
+
+<p>如果想要查看MindSpore如何实现ops.Transpose的，在VS Code中可以右键后Go to Definition(或选中后按F12):</p>
+<div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded z-depth-1" src="/assets/img/ms/2/transpose1.png" />
+</div>
+<p>就进入了:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="c1"># mindspore/mindspore/ops/operations/array_ops.py
+</span><span class="k">class</span> <span class="nc">Transpose</span><span class="p">(</span><span class="n">PrimitiveWithInfer</span><span class="p">):</span>
+    <span class="o">@</span><span class="n">prim_attr_register</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">"""Initialize Transpose"""</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">init_prim_io_names</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="s">'x'</span><span class="p">,</span> <span class="s">'perm'</span><span class="p">],</span> <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="s">'output'</span><span class="p">])</span>
+    <span class="k">def</span> <span class="nf">__infer__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">perm</span><span class="p">):</span>
+        <span class="p">...</span></code></pre></figure>
+
+<p>我们知道，Python中形如output = transpose(Tensor(x))这样，将类变量当成函数进行调用，其实是调该类的__call__方法。但是这个Transpose类没有__call__方法啊？秘密在于作为子类是可以继承父类的方法的，它的父类或父类的父类等，实现了__call__方法。</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="c1"># mindspore/mindspore/ops/primitive.py
+</span><span class="kn">from</span> <span class="nn">.._c_expression</span> <span class="kn">import</span> <span class="n">Primitive_</span><span class="p">,</span> <span class="n">real_run_op</span><span class="p">,</span> <span class="n">prim_type</span>
+
+<span class="c1">#没有__call__方法
+</span><span class="k">class</span> <span class="nc">PrimitiveWithCheck</span><span class="p">(</span><span class="n">Primitive</span><span class="p">):</span>
+    <span class="p">...</span>
+
+<span class="c1">#找到__call__方法了
+</span><span class="k">class</span> <span class="nc">Primitive</span><span class="p">(</span><span class="n">Primitive_</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">should_elim</span><span class="p">,</span> <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">check_elim</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">should_elim</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">output</span>
+        <span class="k">return</span> <span class="n">_run_op</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">...</span>
+    <span class="o">@</span><span class="n">_wrap_func</span>
+    <span class="k">def</span> <span class="nf">_run_op</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">op_name</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="s">"""Single op execution function supported by ge in PyNative mode."""</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">real_run_op</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">op_name</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span></code></pre></figure>
+
+<p>总算找到__call__方法了，它是由Transpose的祖父类Primitive实现的。它调用了_run_op方法, 而_run_op实际调用了real_run_op方法执行算子。但是当我们故技重施，想要直接在IDE中跳转到real_run_op方法以及Primitive的父类Primitive_时，却被告知”No Definition found”。</p>
+
+<p>在文件的开头可以发现，Primitive_，real_run_op，prim_type都是从.._c_expression中导入的, ‘..’意味着c_expression包是在当前文件的上级目录下，即mindspore/mindspore/中。打开mindspore/mindspore/目录，发现有文件_c_expression.cpython-37m-x86_64-linux-gnu.so，<strong>所以_c_expression是个动态链接库，它由C++实现并编译打包，然后python通过cpython的接口导入并使用</strong>。</p>
+
+<p>全文搜索real_run_op发现，mindspore/ccsrc/pipeline/jit/init.cc中，将real_run_op接口绑定为py::object RunOp实现：</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp"># mindspore/ccsrc/pipeline/jit/init.cc
+</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">m</span><span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="s">"real_run_op"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">mindspore</span><span class="o">::</span><span class="n">pynative</span><span class="o">::</span><span class="n">RunOp</span><span class="p">,</span> <span class="s">"Run op pynatively."</span><span class="p">);</span>
+
+<span class="cp"># mindspore/ccsrc/pipeline/pynative/pynative_execute.cc
+</span><span class="n">py</span><span class="o">::</span><span class="n">object</span> <span class="nf">RunOp</span><span class="p">(</span><span class="k">const</span> <span class="n">py</span><span class="o">::</span><span class="n">args</span> <span class="o">&amp;</span><span class="n">args</span><span class="p">)</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="n">PynativeExecutorTry</span><span class="p">(</span><span class="n">executor</span><span class="o">-&gt;</span><span class="n">forward_executor</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">RunOpS</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ret</span><span class="p">,</span> <span class="n">op_exec_info</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>最终是由PynativeExecutor中的forward_executor的RunOpS方法，根据Op的名称及参数计算结果，并将结果存储在ret中返回。</p>
+<h3 id="调试mindspore的python实现">调试MindSpore的Python实现</h3>
+<p>下面我们想要在primitive.py中的_run_op方法中设置断点，这样以Debug模式运行test_transpose.py时，可以在_run_op中停下来，方便我们查看当时的函数调用栈及变量信息。我们使用VS Code调试，所以需要进行调试配置：在工作目录下的.vscode文件夹中创建launch.json文件，向其中添加：</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="p">{</span><span class="w">
+    </span><span class="nl">"configurations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"python"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"python"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"request"</span><span class="p">:</span><span class="w"> </span><span class="s2">"launch"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"program"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${file}"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"console"</span><span class="p">:</span><span class="w"> </span><span class="s2">"integratedTerminal"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"justMyCode"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span></code></pre></figure>
+
+<p>注意这里的justMyCode设置为false后，在debug模式下，VS Code才会跟踪进入library代码。在_run_op方法中点击设置断点，打开test_transpose.py，按F5进入debug模式，就会停到这里：</p>
+<div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded z-depth-1" src="/assets/img/ms/2/transpose2.png" />
+</div>
+<p>如图所示，左上角会显示此时的局部变量与全局变量，左下角会显示函数调用栈，正下方的debug console可以输入python表达式与命令解释执行。如果不debug运行，只是通过单纯的源码阅读，就很难轻易地获得这些信息。</p>
+
+<p>这种方式虽然能成功调试MindSpore的Python代码，但是因为real_run_op的真正实现在动态链接库中(对应C++源码mindspore/ccsrc/pipeline/pynative/pynative_execute.cc)，我们无法在debug python时进入pynative_execute.cc中。<strong>那我们怎么调试动态链接库中的方法呢？</strong></p>
+
+<h2 id="源码编译概览">源码编译概览</h2>
+<p>想要调试动态链接库中的代码，我们需要以Debug模式编译MindSpore源码，这样编译器才会把源码与二进制代码的对应关系写入二进制文件(个人理解，可能不准确)。
+然后我们在源文件中设置断点后，以debug模式运行二进制文件，就能停在断点位置了。</p>
+<h3 id="编译流程">编译流程</h3>
+<p>首先简单介绍下编译流程。参考<a href="https://www.mindspore.cn/install/">官网源码编译教程</a>,可以看到编译之前需要安装一大堆依赖。所幸官方提供了可以编译的<a href="https://gitee.com/mindspore/mindspore#%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E6%96%B9%E5%BC%8F%E5%AE%89%E8%A3%85">docker镜像</a>，使用docker拉取devel镜像就无需安装这些依赖了。执行以下命令：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">docker run <span class="nt">-it</span> <span class="nt">-v</span> /home/fy/disk1/cjm/mindspore:/dev/mindspore <span class="nt">--runtime</span><span class="o">=</span>nvidia <span class="nt">--privileged</span><span class="o">=</span><span class="nb">true </span>swr.cn-south-1.myhuaweicloud.com/mindspore/mindspore-gpu:devel
+git clone https://gitee.com/mindspore/mindspore.git
+<span class="nb">cd </span>mindspore
+<span class="c"># 执行下面这条编译命令，生成的whl文件可供python调用API测试，但是不能执行测试用例，也不能进行C++调试。</span>
+bash build.sh <span class="nt">-e</span> gpu
+<span class="c"># 执行下面这条编译命令，可以执行测试用例，进行C++调试，但是不能供python调用API测试</span>
+<span class="c"># bash build.sh -e gpu -d -t ut -i</span></code></pre></figure>
+
+<p>build.sh中详细说明了各个参数的含义，-d是以Debug模式编译，-t是编译测试用例，-i是增量编译。
+第一次编译时会下载很多依赖包，所以耗时会很久，我当时在服务器上编译了大概1个半小时才完成(如果CPU核数够多可以在build.sh后加-jn参数指定编译的线程，n默认是8)。等到编译成功后我想测试一下mindspore是否成功安装(<strong>必须使用bash build.sh -e gpu编译，才能进行以下测试</strong>)：</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">mindspore</span>
+<span class="k">print</span><span class="p">(</span><span class="n">mindspore</span><span class="p">.</span><span class="n">__version__</span><span class="p">)</span></code></pre></figure>
+
+<p>会报错，提示找不到__version__。查阅<a href="https://gitee.com/mindspore/mindspore#%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E6%96%B9%E5%BC%8F%E5%AE%89%E8%A3%85">文档</a>发现，官方不建议在devel编译后直接安装whl包，而是建议在mindspore runtime镜像中安装，所以编译脚本没有自动安装已编译好的whl包。
+为了方便验证，我直接在devel安装whl(读者也可以自己拉取runtime镜像后安装):</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">pip <span class="nb">install</span> ./output/mindspore-1.2.0-cp37-cp37m-linux_x86_64.whl</code></pre></figure>
+
+<p>然后再运行上面那条语句就可以成功输出mindspore的版本了。</p>
+<h3 id="编译脚本可跳过">编译脚本(可跳过)</h3>
+<p>MindSpore的项目很大，编译脚本非常复杂，但是我们后面要在VS Code中自定义Debug task来调用编译脚本，所以还是需要对编译脚本有一个总体认识，不想了解编译流程的同学可以直接跳过这部分进入下面的调试环节。总体流程是build.sh读取用户参数，设置cmake环境变量，然后调用cmake进行编译。如以下脚本片段：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># build.sh</span>
+build_mindspore<span class="o">()</span>
+<span class="o">{</span>
+    <span class="nv">CMAKE_ARGS</span><span class="o">=</span><span class="s2">"-DDEBUG_MODE=</span><span class="nv">$DEBUG_MODE</span><span class="s2"> -DBUILD_PATH=</span><span class="nv">$BUILD_PATH</span><span class="s2"> -DX86_64_SIMD=</span><span class="k">${</span><span class="nv">X86_64_SIMD</span><span class="k">}</span><span class="s2">"</span>
+    <span class="k">if</span> <span class="o">[[</span> <span class="s2">"X</span><span class="nv">$ENABLE_COVERAGE</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">"Xon"</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then
+      </span><span class="nv">CMAKE_ARGS</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">CMAKE_ARGS</span><span class="k">}</span><span class="s2"> -DENABLE_COVERAGE=ON"</span>
+    <span class="k">fi</span>
+    ...
+    cmake <span class="nt">--build</span> <span class="nb">.</span> <span class="nt">--target</span> package <span class="k">${</span><span class="nv">CMAKE_VERBOSE</span><span class="k">}</span> <span class="nt">-j</span><span class="nv">$THREAD_NUM</span>
+<span class="o">}</span>
+...
+<span class="k">if</span> <span class="o">[[</span> <span class="s2">"X</span><span class="nv">$COMPILE_LITE</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">"Xon"</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then
+  if</span> <span class="o">[[</span> <span class="s2">"X</span><span class="nv">$LITE_LANGUAGE</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">"Xjava"</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then
+    </span>build_java
+  <span class="k">else
+    </span>build_lite
+  <span class="k">fi
+else
+    </span>build_mindspore
+<span class="k">fi</span></code></pre></figure>
+
+<p>可以从下面几行代码看出build.sh会根据不同的编译参数选择编译不同的代码模块(防止编译不必要的模块，以加快编译速度)，这些参数有默认值，也能被用户显示指定值。其中build_mindspore()模块负责编译MindSpore核心C++代码,可以看出它就是先设置cmake参数，最后再调用cmake命令进行编译。为了了解更多编译细节，我们需要查看CmakeLists.txt:</p>
+
+<figure class="highlight"><pre><code class="language-cmake" data-lang="cmake"><span class="c1"># CMakeLists.txt</span>
+<span class="nb">include</span><span class="p">(</span><span class="si">${</span><span class="nv">CMAKE_SOURCE_DIR</span><span class="si">}</span>/cmake/options.cmake<span class="p">)</span>
+<span class="nb">include</span><span class="p">(</span><span class="si">${</span><span class="nv">CMAKE_SOURCE_DIR</span><span class="si">}</span>/cmake/check_requirements.cmake<span class="p">)</span>
+...
+<span class="nb">if</span><span class="p">(</span>ENABLE_D OR ENABLE_ACL OR ENABLE_TESTCASES<span class="p">)</span>
+    <span class="nb">include</span><span class="p">(</span><span class="si">${</span><span class="nv">CMAKE_SOURCE_DIR</span><span class="si">}</span>/cmake/dependency_graphengine.cmake<span class="p">)</span>
+<span class="nb">endif</span><span class="p">()</span>
+
+<span class="nb">add_subdirectory</span><span class="p">(</span>mindspore/ccsrc<span class="p">)</span>
+<span class="nb">add_subdirectory</span><span class="p">(</span>mindspore/core<span class="p">)</span>
+<span class="nb">if</span><span class="p">(</span>ENABLE_TESTCASES OR ENABLE_CPP_ST<span class="p">)</span>
+    <span class="nb">add_subdirectory</span><span class="p">(</span>tests<span class="p">)</span>
+<span class="nb">endif</span><span class="p">()</span>
+<span class="nb">include</span><span class="p">(</span>cmake/package.cmake<span class="p">)</span>
+
+<span class="c1"># cmake/package.cmake</span>
+<span class="nb">file</span><span class="p">(</span>GLOB MS_PY_LIST <span class="si">${</span><span class="nv">CMAKE_SOURCE_DIR</span><span class="si">}</span>/mindspore/*.py<span class="p">)</span> <span class="c1"># 定义变量MS_PY_LIST为/mindspore目录下的所有.py文件</span>
+<span class="nb">install</span><span class="p">(</span>
+    FILES <span class="si">${</span><span class="nv">MS_PY_LIST</span><span class="si">}</span>
+    DESTINATION <span class="si">${</span><span class="nv">INSTALL_PY_DIR</span><span class="si">}</span>
+    COMPONENT mindspore
+<span class="p">)</span> <span class="c1"># 将py文件都拷贝到安装目录</span></code></pre></figure>
+
+<p>如上所示，除了include一些第三方库的编译文件外，CmakeLists.txt中主要指定了MindSpore自己需要编译的文件目录。options.cmake负责根据传入cmake的参数设置编译参数,check_requirements.cmake提供了一些检验编译依赖的函数, package.cmake负责将编译完成的动态链接库等文件安装到指定目录。由上面几行package.cmake中的命令可以看出，cmake直接将mindspore/目录下的所有python文件都拷贝到安装目录，没有类似C++的编译环节。</p>
+
+<p>与build.sh一样，cmake也会通过不同的参数，决定编译哪些部分(如tests, graphengine等)。需要注意的是mindspore/ccsrc和mindspore/core，这两个目录下存放了MindSpore的核心C++代码，将它们include进来后，cmake会自动去这两个目录下寻找CmakeLists.txt文件并递归编译。ccsrc和core下的CmakeLists.txt文件就相对简单了，主要指定了编译的target及其依赖：</p>
+
+<figure class="highlight"><pre><code class="language-cmake" data-lang="cmake"><span class="c1"># mindspore/core/CMakeLists.txt</span>
+<span class="nb">file</span><span class="p">(</span>GLOB_RECURSE CORE_SRC_LIST RELATIVE <span class="si">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="si">}</span>
+  <span class="s2">"abstract/*.cc"</span>
+  <span class="s2">"base/*.cc"</span>
+  <span class="s2">"ops/*.cc"</span>
+  <span class="s2">"ir/*.cc"</span>
+  <span class="s2">"utils/*.cc"</span>
+  <span class="s2">"load_mindir/*.cc"</span>
+  <span class="p">)</span> <span class="c1"># 定义变量CORE_SRC_LIST为几个子目录下的.cc文件</span>
+<span class="nb">add_library</span><span class="p">(</span>mindspore_core STATIC <span class="si">${</span><span class="nv">CORE_SRC_LIST</span><span class="si">}</span><span class="p">)</span> <span class="c1"># 定义新的编译生成库mindspore_core，由CORE_SRC_LIST编译生成</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span>mindspore_core PRIVATE mindspore_gvar<span class="p">)</span> <span class="c1"># 给mindspore_core指定新的dependency库，mindspore_gvar</span></code></pre></figure>
+
+<p>从上述CMakeLists.txt可以看出，我们如果在core/的子目录下添加.cc文件，无需修改编译脚本，但是如果想要添加新的子目录，就要将其加入file命令中。</p>
+
+<p>其他各模块下的CmakeLists.txt也大同小异，如tests/, graphengine/等，感兴趣的同学可以自行探索。</p>
+
+<h2 id="调试c代码">调试C++代码</h2>
+<p><strong>必须调用bash build.sh -e gpu -d -t ut -i编译成功后，才能进行下面的调试。</strong>
+由于C++代码比较底层，测试的时候需要很多Context设置，所以我们直接调试测试用例，就不用自己编写测试代码了。我们发现tests/ut/runtest.sh接收cpp作为参数后，会调用tests/ut/cpp/runtest.sh:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># tests/ut/cpp/runtest.sh</span>
+<span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="k">${</span><span class="nv">BUILD_PATH</span><span class="k">}</span>/mindspore/googletest/googlemock/gtest:<span class="k">${</span><span class="nv">PROJECT_PATH</span><span class="k">}</span>/mindspore:<span class="se">\</span>
+<span class="k">${</span><span class="nv">PROJECT_PATH</span><span class="k">}</span>/mindspore/lib:<span class="k">${</span><span class="nv">PROJECT_PATH</span><span class="k">}</span>/graphengine/third_party/prebuild/x86_64:<span class="se">\</span>
+<span class="k">${</span><span class="nv">PROJECT_PATH</span><span class="k">}</span>/graphengine/third_party/prebuild/aarch64:<span class="k">${</span><span class="nv">LD_LIBRARY_PATH</span><span class="k">}</span>
+<span class="nb">export </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="k">${</span><span class="nv">PROJECT_PATH</span><span class="k">}</span>/tests/ut/cpp/python_input:<span class="nv">$PYTHONPATH</span>:<span class="k">${</span><span class="nv">PROJECT_PATH</span><span class="k">}</span>
+<span class="nb">export </span><span class="nv">GLOG_v</span><span class="o">=</span>2
+<span class="nb">export </span><span class="nv">GC_COLLECT_IN_CELL</span><span class="o">=</span>1
+
+<span class="nb">cp</span> <span class="nt">-fr</span> <span class="nv">$PROJECT_PATH</span>/tests/ut/data <span class="k">${</span><span class="nv">PROJECT_PATH</span><span class="k">}</span>/build/mindspore/tests/ut/cpp/
+python <span class="k">${</span><span class="nv">PROJECT_PATH</span><span class="k">}</span>/build/mindspore/tests/ut/cpp/data/dataset/testAlbum/gen_json.py
+
+<span class="k">if</span> <span class="o">[</span> <span class="nv">$# </span><span class="nt">-gt</span> 0 <span class="o">]</span><span class="p">;</span> <span class="k">then</span> 
+  ./ut_tests <span class="nt">--gtest_filter</span><span class="o">=</span><span class="nv">$1</span>
+<span class="k">else</span>
+  ./ut_tests
+<span class="k">fi</span></code></pre></figure>
+
+<p>上述脚本做了三件事：</p>
+<ol>
+  <li>设置环境变量，包括指定动态库加载路径的LD_LIBRARY_PATH，指定python文件加载路径的PYTHONPATH</li>
+  <li>拷贝一些必要的文件</li>
+  <li>执行之前编译的二进制文件ut_tests</li>
+</ol>
+
+<h3 id="gdb调试可跳过">gdb调试(可跳过)</h3>
+<p>gdb可以使用命令gdb ut_tests来轻松调试二进制代码，所以只要完成了上述脚本的步骤1、2，我们就能使用gdb调试ut_tests，从而进入到我们想要调试的C++文件中了。而1、2步骤，我们是可以通过命令完成的，首先要获取自己的PROJECT_PATH，即mindspore源码所在的绝对路径，然后执行:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">vim ~/.bashrc
+<span class="c"># 在最下面添加：</span>
+<span class="nb">export </span><span class="nv">PROJECT_PATH</span><span class="o">=</span>/dev/mindspore/mindspore
+<span class="nb">export </span><span class="nv">BUILD_PATH</span><span class="o">=</span>/dev/mindspore/mindspore/build
+<span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="k">${</span><span class="nv">BUILD_PATH</span><span class="k">}</span>/mindspore/googletest/googlemock/gtest:<span class="k">${</span><span class="nv">PROJECT_PATH</span><span class="k">}</span>/mindspore:<span class="se">\</span>
+<span class="k">${</span><span class="nv">PROJECT_PATH</span><span class="k">}</span>/mindspore/lib:<span class="k">${</span><span class="nv">PROJECT_PATH</span><span class="k">}</span>/graphengine/third_party/prebuild/x86_64:<span class="se">\</span>
+<span class="k">${</span><span class="nv">PROJECT_PATH</span><span class="k">}</span>/graphengine/third_party/prebuild/aarch64:<span class="se">\</span>
+<span class="k">${</span><span class="nv">BUILD_PATH</span><span class="k">}</span>/package/lib:<span class="k">${</span><span class="nv">LD_LIBRARY_PATH</span><span class="k">}</span>
+<span class="nb">export </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="k">${</span><span class="nv">PROJECT_PATH</span><span class="k">}</span>/tests/ut/cpp/python_input:<span class="nv">$PYTHONPATH</span>:<span class="k">${</span><span class="nv">PROJECT_PATH</span><span class="k">}</span>
+<span class="nb">export </span><span class="nv">GLOG_v</span><span class="o">=</span>2
+<span class="c"># 保存文件后退出</span>
+<span class="nb">source</span> ~/.bashrc
+<span class="nb">cp</span> <span class="nt">-fr</span> <span class="nv">$PROJECT_PATH</span>/tests/ut/data <span class="k">${</span><span class="nv">PROJECT_PATH</span><span class="k">}</span>/build/mindspore/tests/ut/cpp/
+python <span class="k">${</span><span class="nv">PROJECT_PATH</span><span class="k">}</span>/build/mindspore/tests/ut/cpp/data/dataset/testAlbum/gen_json.py</code></pre></figure>
+
+<p>再执行：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">cd </span>build/mindspore/tests/ut/cpp
+gdb ut_tests</code></pre></figure>
+
+<p>就成功使用gdb调试C++的测试用例了，下面可以使用gdb的命令设置断点、执行程序、打印变量等。</p>
+<h3 id="vs-code调试重要">VS Code调试(重要)</h3>
+<p>gdb虽然能够满足我们的基本调试功能，但是用起来非常不直观，比如设置断点、查看变量等都要使用命令。因此我想要在VS Code中设置断点并调试，思路就是参考上述gdb调试的流程，将其配置成VS Code的调试任务。首先我们需要在.vscode文件夹下的launch.json中添加gdb debug任务，并且在tasks.json中添加build任务:</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span class="err">//</span><span class="w"> </span><span class="err">.vscode/launch.json</span><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="nl">"configurations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+            </span><span class="nl">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"(gdb) Launch"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cppdbg"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"request"</span><span class="p">:</span><span class="w"> </span><span class="s2">"launch"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"program"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${workspaceFolder}/mindspore/build/mindspore/tests/ut/cpp/ut_tests"</span><span class="p">,</span><span class="w">  </span><span class="err">//指定调试程序</span><span class="w">
+            </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="s2">"--gtest_filter=TestPynativeExecute.TestCreateContext"</span><span class="w"> </span><span class="err">//ut_tests使用了gtest框架，该参数可以指定特定测试用例执行</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nl">"stopAtEntry"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"cwd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${workspaceFolder}/mindspore/build/mindspore/tests/ut/cpp"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"externalConsole"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"MIMode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gdb"</span><span class="p">,</span><span class="w">
+            </span><span class="nl">"setupCommands"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                </span><span class="p">{</span><span class="w">
+                    </span><span class="nl">"description"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Enable pretty-printing for gdb"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"text"</span><span class="p">:</span><span class="w"> </span><span class="s2">"-enable-pretty-printing"</span><span class="p">,</span><span class="w">
+                    </span><span class="nl">"ignoreFailures"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+                </span><span class="p">}</span><span class="w">
+            </span><span class="p">],</span><span class="w">
+            </span><span class="nl">"envFile"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${workspaceFolder}/.vscode/project.env"</span><span class="p">,</span><span class="w"> </span><span class="err">//放置tests/ut/cpp/runtest.sh脚本中的环境变量</span><span class="w">
+            </span><span class="nl">"preLaunchTask"</span><span class="p">:</span><span class="w"> </span><span class="s2">"build"</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span><span class="err">//</span><span class="w"> </span><span class="err">.vscode/tasks.json</span><span class="w">
+</span><span class="p">{</span><span class="w">
+    </span><span class="nl">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0.0"</span><span class="p">,</span><span class="w">
+    </span><span class="nl">"tasks"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nl">"label"</span><span class="p">:</span><span class="w"> </span><span class="s2">"build"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"shell"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${workspaceFolder}/mindspore/build.sh"</span><span class="p">,</span><span class="w">
+          </span><span class="nl">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+           </span><span class="s2">"-e"</span><span class="p">,</span><span class="w"> </span><span class="s2">"gpu"</span><span class="p">,</span><span class="w"> </span><span class="s2">"-d"</span><span class="p">,</span><span class="w"> </span><span class="s2">"-t"</span><span class="p">,</span><span class="w"> </span><span class="s2">"ut"</span><span class="p">,</span><span class="w"> </span><span class="s2">"-j16"</span><span class="p">,</span><span class="w"> </span><span class="s2">"-i"</span><span class="w">
+          </span><span class="p">],</span><span class="w">
+          </span><span class="nl">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+              </span><span class="nl">"cwd"</span><span class="p">:</span><span class="w"> </span><span class="s2">"${workspaceFolder}/mindspore/"</span><span class="p">,</span><span class="w">
+          </span><span class="p">}</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span></code></pre></figure>
+
+<p>添加环境变量配置文件：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c"># .vscode/project.env</span>
+<span class="c"># 为了保证正确，这里我都写成了绝对路径，读者也可以尝试使用${PROJECT_PATH}等变量</span>
+<span class="nv">PROJECT_PATH</span><span class="o">=</span>/dev/mindspore/mindspore
+<span class="nv">BUILD_PATH</span><span class="o">=</span>/dev/mindspore/mindspore/build
+<span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span>/dev/mindspore/mindspore/build/mindspore/googletest/googlemock/gtest:/dev/mindspore/mindspore/mindspore:/dev/mindspore/mindspore/mindspore/lib:/dev/mindspore/mindspore/graphengine/third_party/prebuild/x86_64:/dev/mindspore/mindspore/graphengine/third_party/prebuild/aarch64:/dev/mindspore/mindspore/build/package/lib
+<span class="nv">PYTHONPATH</span><span class="o">=</span>/dev/mindspore/mindspore/tests/ut/cpp/python_input:/dev/mindspore/mindspore
+<span class="nv">GLOG_v</span><span class="o">=</span>2
+<span class="nv">GC_COLLECT_IN_CELL</span><span class="o">=</span>1</code></pre></figure>
+
+<p>回顾下，我们在阅读test_transpose.py的实现时，最后追到了mindspore/ccsrc/pipeline/pynative/pynative_execute.cc中的RunOp方法，因此我希望找到pynative_execute的测试用例进行调试，就可能进入RunOp方法中了。找到了tests/ut/cpp/pynative/pynative_execute_test.cc，设置断点，选择gdb debug任务并点击执行(左上角)：</p>
+<div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded z-depth-1" src="/assets/img/ms/2/cppdebug1.png" />
+</div>
+<p>VS Code在执行launch.json中配置的debug任务前，会自动调用preLanuchTask进行编译，编译完成后执行debug任务，就能成功进入断点位置了：</p>
+<div class="col-sm mt-3 mt-md-0">
+        <img class="img-fluid rounded z-depth-1" src="/assets/img/ms/2/cppdebug2.png" />
+</div>
+<p>这样我们也能查看C++代码的变量信息、调用栈了。我在RunOp函数中设置断点后，继续执行debug，却没有进入断点。经过分析，pynative_execute_test.cc似乎并没有真正地运行operation:</p>
+
+<figure class="highlight"><pre><code class="language-cpp" data-lang="cpp"><span class="cp"># tests/ut/cpp/pynative/pynative_execute_test.cc
+</span><span class="n">OpExecInfoPtr</span> <span class="nf">ConstructOpExecInfo</span><span class="p">()</span> <span class="p">{</span>
+  <span class="p">...</span>
+  <span class="k">return</span> <span class="n">PynativeExecutor</span><span class="o">::</span><span class="n">GetInstance</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">forward_executor</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GenerateOpExecInfo</span><span class="p">(</span><span class="n">args</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">TEST_F</span><span class="p">(</span><span class="n">TestPynativeExecute</span><span class="p">,</span> <span class="n">TestCreateContext</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">ctx3</span> <span class="o">=</span> <span class="n">MsContext</span><span class="o">::</span><span class="n">GetInstance</span><span class="p">();</span>
+  <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="n">ctx3</span><span class="o">-&gt;</span><span class="n">backend_policy</span><span class="p">(),</span> <span class="s">"vm"</span><span class="p">);</span>
+  <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="n">ctx3</span><span class="o">-&gt;</span><span class="n">get_param</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">MS_CTX_DEVICE_TARGET</span><span class="p">),</span> <span class="s">"CPU"</span><span class="p">);</span>
+
+  <span class="n">ctx3</span><span class="o">-&gt;</span><span class="n">set_backend_policy</span><span class="p">(</span><span class="s">"ge_only"</span><span class="p">);</span>
+  <span class="n">ctx3</span><span class="o">-&gt;</span><span class="n">set_param</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">MS_CTX_DEVICE_TARGET</span><span class="p">,</span> <span class="s">"GPU"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">ctx4</span> <span class="o">=</span> <span class="n">MsContext</span><span class="o">::</span><span class="n">GetInstance</span><span class="p">();</span>
+
+  <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="n">ctx3</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span> <span class="n">ctx4</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+  <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="n">ctx4</span><span class="o">-&gt;</span><span class="n">backend_policy</span><span class="p">(),</span> <span class="s">"ge_only"</span><span class="p">);</span>
+  <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="n">ctx4</span><span class="o">-&gt;</span><span class="n">get_param</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="p">(</span><span class="n">MS_CTX_DEVICE_TARGET</span><span class="p">),</span> <span class="s">"GPU"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">TEST_F</span><span class="p">(</span><span class="n">TestPynativeExecute</span><span class="p">,</span> <span class="n">TestDefaultContext</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">ctx</span> <span class="o">=</span> <span class="n">MsContext</span><span class="o">::</span><span class="n">GetInstance</span><span class="p">();</span>
+  <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">backend_policy</span><span class="p">()),</span> <span class="s">"ge_only"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">ctx2</span> <span class="o">=</span> <span class="n">MsContext</span><span class="o">::</span><span class="n">GetInstance</span><span class="p">();</span>
+  <span class="n">ASSERT_EQ</span><span class="p">(</span><span class="n">ctx</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span> <span class="n">ctx2</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>它里面只有这两个测试用例，似乎都是测试MsContext的，并非是PyNativeExecute。而且这个文件中还有一个未被调用的方法ConstructOpExecInfo，生成了一个PynativeExecutor Operator的调用信息。因此我大胆地猜测，这个测试用例还未写完，后面应该会补上使用PyNativeExecute执行算子的测试，这样才会调用RunOp方法，这点还有待跟MindSpore开发团队确认。</p>
+
+<h2 id="下期预告">下期预告</h2>
+<p>接下来我们小组可能会从几个角度去继续进行源码的阅读评注：</p>
+<ul>
+  <li>Python/C++测试用例的编写</li>
+  <li>自定义算子相关代码</li>
+  <li>PyNative与Graph模式运行相关</li>
+  <li>IR与基于源码转换的自动微分</li>
+</ul>
+
+<h3 id="部分参考">部分参考：</h3>
+<ul>
+  <li>https://www.jianshu.com/p/c3806d2ad1f8</li>
+  <li>https://code.visualstudio.com/docs/editor/tasks</li>
+  <li>https://code.visualstudio.com/docs/cpp/launch-json-reference</li>
+</ul>
+
+<h2 id="test">test</h2>
+<h2 id="测试">测试</h2>
+
+  </article>
+
+  
+
+</div>
+
+    </div>
+
+    <!-- Footer -->
+
+    
+<footer class="fixed-bottom">
+  <div class="container mt-0">
+    &copy; Copyright 2021 Junming  Cao.
+    Powered by <a href="http://jekyllrb.com/" target="_blank">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio">al-folio</a> theme.
+
+    
+    Last updated: July 04, 2021.
+    
+  </div>
+</footer>
+
+
+
+  </body>
+
+  <!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+
+  <!-- Bootsrap & MDB scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.4.4/umd/popper.min.js" integrity="sha512-eUQ9hGdLjBjY3F41CScH3UX+4JDSI9zXeroz7hJ+RteoCaY+GP/LDoM8AO+Pt+DRFw3nXqsjh9Zsts8hnYv8/A==" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha512-M5KW3ztuIICmVIhjSqXe01oV2bpe248gOxqmlcYrEzAvws7Pw3z6BK0iGbrwvdrUQUhi3eXgtxp5I8PDo9YfjQ==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.1/js/mdb.min.js" integrity="sha512-Mug9KHKmroQFMLm93zGrjhibM2z2Obg9l6qFG2qKjXEXkMp/VDkI4uju9m4QKPjWSwQ6O2qzZEnJDEeCw0Blcw==" crossorigin="anonymous"></script>
+
+  
+<!-- Mansory & imagesLoaded -->
+<script defer src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+<script defer src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+<script defer src="/assets/js/mansory.js" type="text/javascript"></script>
+
+
+  
+
+
+<!-- Load Common JS -->
+<script src="/assets/js/common.js"></script>
+
+<!-- Load DarkMode JS -->
+<script src="/assets/js/dark_mode.js"></script>
+
+
+</html>
