@@ -11,6 +11,7 @@ footer_text: >
   Powered by <a href="http://jekyllrb.com/" target="_blank">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio">al-folio</a> theme.
 
 url:  https://jamescao2048.github.io/
+repository: JamesCao2048/JamesCao2048.github.io
 baseurl:  # the subpath of your site, e.g. /blog/  代码评注系列(一):编译文档并导入dash
 last_updated: true # set to true if you want to display last updated in the footer
 # -----------------------------------------------------------------------------
