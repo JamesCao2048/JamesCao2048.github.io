@@ -1,0 +1,51 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import publications from "@/data/publications.json";
+
+const papers = [...publications].sort((a, b) => b.year - a.year);
+// Preserve the paper's author order; the site owner's name is only highlighted.
+const authorParts = (authors: string) => authors.split(/(Junming Cao)/g);
+---
+
+<Layout
+  title="Publications"
+  description="Publications by Junming Cao in software engineering, code comprehension, and machine-learning systems."
+>
+  <header class="page-heading">
+    <p class="eyebrow">Research</p>
+    <h1>Publications</h1>
+  </header>
+  <section class="publication-section" aria-label="All publications">
+    <ol class="publication-list">
+      {
+        papers.map(paper => (
+          <li id={paper.id}>
+            <div class="publication-year">{paper.year}</div>
+            <article>
+              <div class="publication-kicker">
+                <span>{paper.venue}</span>
+                <span class="role">{paper.role}</span>
+              </div>
+              <h3>{paper.title}</h3>
+              <p class="authors">
+                {authorParts(paper.authors).map(part =>
+                  part === "Junming Cao" ? <strong>{part}</strong> : part
+                )}
+              </p>
+              {paper.award && (
+                <p class="award">
+                  <span aria-hidden="true">✳</span> {paper.award}
+                </p>
+              )}
+              <div class="paper-links">
+                {paper.links.map(link => (
+                  <a href={link.url}>{link.label}</a>
+                ))}
+              </div>
+            </article>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+</Layout>

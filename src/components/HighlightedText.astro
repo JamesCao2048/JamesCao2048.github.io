@@ -1,0 +1,17 @@
+---
+interface Props {
+  text: string;
+  highlights?: string[];
+}
+const { text, highlights = [] } = Astro.props;
+const escape = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const parts = highlights.length
+  ? text.split(new RegExp(`(${highlights.map(escape).join("|")})`, "g"))
+  : [text];
+---
+
+{
+  parts.map(part =>
+    highlights.includes(part) ? <strong>{part}</strong> : part
+  )
+}

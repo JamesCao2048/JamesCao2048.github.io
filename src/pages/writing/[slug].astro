@@ -1,0 +1,88 @@
+---
+import { render } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import { getWriting, formatDate } from "@/utils/content";
+export async function getStaticPaths() {
+  return (await getWriting()).map(post => ({
+    params: { slug: post.data.slug },
+    props: { post },
+  }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<Layout
+  title={post.data.title}
+  description={post.data.description}
+  searchCategory="Blogs"
+  narrow
+  article
+>
+  <header class="article-heading">
+    <a class="back-link" href="/writing/">Blogs</a><p class="eyebrow">
+      {post.data.kind}
+    </p><h1>{post.data.title}</h1><p class="article-deck">
+      {post.data.description}
+    </p><p class="date-line">
+      <time datetime={post.data.publishedAt!.toISOString()}
+        >{formatDate(post.data.publishedAt!)}</time
+      >{
+        post.data.updatedAt && (
+          <>
+            {" "}
+            · Updated{" "}
+            <time datetime={post.data.updatedAt.toISOString()}>
+              {formatDate(post.data.updatedAt)}
+            </time>
+          </>
+        )
+      }
+    </p>
+    {
+      post.data.originalSource && (
+        <p class="source-note" data-original-source>
+          English adaptation of the{" "}
+          <a
+            href={post.data.originalSource.url}
+            title={post.data.originalSource.title}
+          >
+            Chinese original
+          </a>{" "}
+          on {post.data.originalSource.platform}
+          {post.data.originalSource.publishedAt && (
+            <>
+              , originally published on{" "}
+              <time
+                datetime={post.data.originalSource.publishedAt.toISOString()}
+              >
+                {formatDate(post.data.originalSource.publishedAt)}
+              </time>
+            </>
+          )}
+          .
+        </p>
+      )
+    }
+  </header>
+  <article class="prose" lang={post.data.lang}><Content /></article>
+  {
+    post.data.syndicationUrl && (
+      <aside class="evidence">
+        <a href={post.data.syndicationUrl}>Also published on LinkedIn </a>
+      </aside>
+    )
+  }
+</Layout>
+
+<style>
+  .source-note {
+    margin-top: 0.75rem;
+    color: var(--muted);
+    font-size: 0.78rem;
+    line-height: 1.7;
+  }
+  .source-note a {
+    color: var(--link);
+  }
+</style>

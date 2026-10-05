@@ -1,0 +1,188 @@
+[
+  {
+    "path": "/",
+    "target": "/",
+    "kind": "preserve-page",
+    "description": "Established public page; replace content at this route."
+  },
+  {
+    "path": "/assets/img/profile.jpeg",
+    "target": "/assets/img/profile.jpeg",
+    "kind": "preserve-asset",
+    "description": "Existing public portrait; preserve the legacy image URL."
+  },
+  {
+    "path": "/assets/pdf/BugPecker.pdf",
+    "target": "/assets/pdf/BugPecker.pdf",
+    "kind": "preserve-asset",
+    "description": "Public scholarly PDF at its existing source path."
+  },
+  {
+    "path": "/assets/pdf/CocoQa.pdf",
+    "target": "/assets/pdf/CocoQa.pdf",
+    "kind": "preserve-asset",
+    "description": "Public scholarly PDF at its existing source path."
+  },
+  {
+    "path": "/assets/pdf/DNNLocator.pdf",
+    "target": "/assets/pdf/DNNLocator.pdf",
+    "kind": "preserve-asset",
+    "description": "Public scholarly PDF at its existing source path."
+  },
+  {
+    "path": "/assets/pdf/dlperf.pdf",
+    "target": "/assets/pdf/dlperf.pdf",
+    "kind": "preserve-asset",
+    "description": "Public scholarly PDF at its existing source path."
+  },
+  {
+    "path": "/assets/pdf/dlstack.pdf",
+    "target": "/assets/pdf/dlstack.pdf",
+    "kind": "preserve-asset",
+    "description": "Public scholarly PDF at its existing source path."
+  },
+  {
+    "path": "/back_posts/2015-03-15-formatting-and-links/",
+    "target": "/projects/",
+    "kind": "retired-demo",
+    "description": "Old al-folio example post. Retire the template content with a clear notice or redirect."
+  },
+  {
+    "path": "/back_posts/2015-05-15-images/",
+    "target": "/projects/",
+    "kind": "retired-demo",
+    "description": "Old al-folio example post. Retire the template content with a clear notice or redirect."
+  },
+  {
+    "path": "/back_posts/2015-07-15-code/",
+    "target": "/projects/",
+    "kind": "retired-demo",
+    "description": "Old al-folio example post. Retire the template content with a clear notice or redirect."
+  },
+  {
+    "path": "/back_posts/2015-10-20-comments/",
+    "target": "/projects/",
+    "kind": "retired-demo",
+    "description": "Old al-folio example post. Retire the template content with a clear notice or redirect."
+  },
+  {
+    "path": "/back_posts/2015-10-20-math/",
+    "target": "/projects/",
+    "kind": "retired-demo",
+    "description": "Old al-folio example post. Retire the template content with a clear notice or redirect."
+  },
+  {
+    "path": "/back_posts/2018-12-22-distill/",
+    "target": "/projects/",
+    "kind": "retired-demo",
+    "description": "Old al-folio example post. Retire the template content with a clear notice or redirect."
+  },
+  {
+    "path": "/back_posts/2020-09-28-github-metadata/",
+    "target": "/projects/",
+    "kind": "retired-demo",
+    "description": "Old al-folio example post. Retire the template content with a clear notice or redirect."
+  },
+  {
+    "path": "/blog/",
+    "target": "/projects/",
+    "kind": "retired-blog",
+    "description": "Legacy blog has been retired at the owner\u2019s request. Offer a visible link to current projects."
+  },
+  {
+    "path": "/blog/2021/mindspore/2",
+    "target": "/projects/",
+    "kind": "retired-blog",
+    "description": "Historical mistyped internal link to the second MindSpore article; provide the same retirement notice."
+  },
+  {
+    "path": "/blog/2021/mindspore1/",
+    "target": "/projects/",
+    "kind": "retired-blog",
+    "description": "Retired MindSpore article 1; present a clear retirement notice, not old article content."
+  },
+  {
+    "path": "/blog/2021/mindspore2/",
+    "target": "/projects/",
+    "kind": "retired-blog",
+    "description": "Retired MindSpore article 2; present a clear retirement notice, not old article content."
+  },
+  {
+    "path": "/blog/2021/mindspore3/",
+    "target": "/projects/",
+    "kind": "retired-blog",
+    "description": "Retired MindSpore article 3; present a clear retirement notice, not old article content."
+  },
+  {
+    "path": "/news/announcement_1/",
+    "target": "/",
+    "kind": "retired-demo",
+    "description": "Old al-folio example announcement. Redirect to the home page."
+  },
+  {
+    "path": "/news/announcement_2/",
+    "target": "/",
+    "kind": "retired-demo",
+    "description": "Old al-folio example announcement. Redirect to the home page."
+  },
+  {
+    "path": "/news/announcement_3/",
+    "target": "/",
+    "kind": "retired-demo",
+    "description": "Old al-folio example announcement. Redirect to the home page."
+  },
+  {
+    "path": "/projects/",
+    "target": "/projects/",
+    "kind": "preserve-page",
+    "description": "Established public page; replace content at this route."
+  },
+  {
+    "path": "/projects/1_project/",
+    "target": "/projects/",
+    "kind": "retired-demo",
+    "description": "Old al-folio example project, unrelated to Junming\u2019s actual work. Replace with a redirect to current projects."
+  },
+  {
+    "path": "/projects/2_project/",
+    "target": "/projects/",
+    "kind": "retired-demo",
+    "description": "Old al-folio example project, unrelated to Junming\u2019s actual work. Replace with a redirect to current projects."
+  },
+  {
+    "path": "/projects/3_project/",
+    "target": "/projects/",
+    "kind": "retired-demo",
+    "description": "Old al-folio example project, unrelated to Junming\u2019s actual work. Replace with a redirect to current projects."
+  },
+  {
+    "path": "/projects/4_project/",
+    "target": "/projects/",
+    "kind": "retired-demo",
+    "description": "Old al-folio example project, unrelated to Junming\u2019s actual work. Replace with a redirect to current projects."
+  },
+  {
+    "path": "/projects/5_project/",
+    "target": "/projects/",
+    "kind": "retired-demo",
+    "description": "Old al-folio example project, unrelated to Junming\u2019s actual work. Replace with a redirect to current projects."
+  },
+  {
+    "path": "/projects/6_project/",
+    "target": "/projects/",
+    "kind": "retired-demo",
+    "description": "Old al-folio example project, unrelated to Junming\u2019s actual work. Replace with a redirect to current projects."
+  },
+  {
+    "path": "/publications/",
+    "target": "/publications/",
+    "kind": "preserve-page",
+    "description": "Established public page; replace content at this route."
+  },
+  {
+    "path": "/teaching/",
+    "target": "/",
+    "kind": "retired-demo",
+    "description": "Old al-folio teaching placeholder. Redirect to the home page."
+  }
+]

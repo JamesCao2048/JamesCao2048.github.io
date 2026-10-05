@@ -1,0 +1,114 @@
+---
+import { Image } from "astro:assets";
+import portrait from "@/assets/images/junming-cao.webp";
+import Layout from "@/layouts/Layout.astro";
+import FeaturedProject from "@/components/FeaturedProject.astro";
+import SelectedPublications from "@/components/SelectedPublications.astro";
+import News from "@/components/News.astro";
+import profile from "@/data/profile.json";
+import { getProjects, getWriting, formatDate } from "@/utils/content";
+const projects = (await getProjects()).filter(p => p.data.featured);
+const writing = (await getWriting())
+  .filter(p => p.data.lang === "en")
+  .slice(0, 3);
+---
+
+<Layout>
+  <section class="hero" aria-labelledby="hero-title">
+    <Image
+      class="hero-portrait"
+      src={portrait}
+      alt="Portrait of Junming Cao"
+      widths={[160, 240, 320, 480]}
+      sizes="(max-width: 540px) 80px, (max-width: 900px) 160px, 220px"
+      width={220}
+      height={220}
+      loading="eager"
+      fetchpriority="high"
+    />
+    <h1 id="hero-title">
+      {profile.headline}
+    </h1>
+    <p class="hero-bio">
+      {profile.identity}<br />{profile.educationLine}
+    </p>
+    <p class="hero-summary">
+      {profile.summary}
+    </p>
+  </section>
+  <News />
+  <section class="section" aria-labelledby="selected-projects">
+    <div class="section-heading">
+      <h2 id="selected-projects">Selected projects</h2><a
+        class="small-link"
+        href="/projects/"
+        >All projects
+      </a>
+    </div>
+    <div class="featured-projects">
+      {projects.map(project => <FeaturedProject project={project} />)}
+    </div>
+  </section>
+
+  {
+    writing.length > 0 && (
+      <section class="section" aria-labelledby="selected-writing">
+        <div class="section-heading">
+          <>
+            <h2 id="selected-writing">Recent Blogs</h2>
+            <a class="small-link" href="/writing/">
+              All blogs
+            </a>
+          </>
+        </div>
+        {writing.map(post => (
+          <article class="writing-row">
+            <time datetime={post.data.publishedAt!.toISOString()}>
+              {formatDate(post.data.publishedAt!)}
+            </time>
+            <h3>
+              <a href={`/writing/${post.data.slug}/`}>{post.data.title}</a>
+            </h3>
+            <p>{post.data.description}</p>
+          </article>
+        ))}
+      </section>
+    )
+  }
+  <section class="section open-source" aria-labelledby="open-source">
+    <div>
+      <h2 id="open-source">Open Source Contribution</h2>
+      <p>
+        I contribute execution, verification, and diagnostic tools for Ascend
+        kernel engineering and model training.
+      </p>
+    </div>
+    <ul class="contribution-list">
+      {
+        profile.openSource.map(item => (
+          <li>
+            <>
+              <h3>
+                <a href={item.url}>{item.title}</a>
+              </h3>
+              <p>{item.description}</p>
+              {item.links.length > 0 && (
+                <ul
+                  class="project-evidence-links"
+                  aria-label="Representative contributions"
+                >
+                  {item.links.map(link => (
+                    <li>
+                      <a href={link.url}>{link.label}</a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+  <SelectedPublications />
+</Layout>

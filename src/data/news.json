@@ -1,0 +1,137 @@
+[
+  {
+    "date": "2026-10",
+    "content": [
+      {
+        "text": "I’ll be attending "
+      },
+      {
+        "text": "NeurIPS 2026",
+        "url": "https://neurips.cc/Conferences/2026"
+      },
+      {
+        "text": " in Sydney this December, and would love to meet fellow students, researchers, and engineers for a "
+      },
+      {
+        "text": "coffee chat",
+        "url": "mailto:junmingcao@foxmail.com"
+      },
+      {
+        "text": "."
+      }
+    ]
+  },
+  {
+    "date": "2026-07",
+    "content": [
+      {
+        "text": "I became a committer in the "
+      },
+      {
+        "text": "Cannbot Community",
+        "url": "https://gitcode.com/cann/cannbot"
+      },
+      {
+        "text": ". The Cannbot community builds open-source coding-agent tools for Ascend NPU development in the CANN ecosystem. It brings together reusable skills, domain knowledge, and workflows for kernel development, model migration, and inference optimization."
+      }
+    ]
+  },
+  {
+    "date": "2026-06",
+    "content": [
+      {
+        "text": "Our paper, "
+      },
+      {
+        "text": "Lifting the Veil on Composition, Risks, and Mitigations of the Large Language Model Supply Chain",
+        "url": "https://doi.org/10.1145/3830903"
+      },
+      {
+        "text": ", was accepted to ACM TOSEM."
+      }
+    ]
+  },
+  {
+    "date": "2026-04",
+    "content": [
+      {
+        "text": "Our CodeMap paper, "
+      },
+      {
+        "text": "Understanding Codebase like a Professional! Human–AI Collaboration for Code Comprehension",
+        "url": "https://gaojie058.github.io/code-map/"
+      },
+      {
+        "text": ", received an ACM SIGSOFT Distinguished Paper Award at ICPC 2026."
+      }
+    ]
+  },
+  {
+    "date": "2025-12",
+    "content": [
+      {
+        "text": "Our paper, "
+      },
+      {
+        "text": "Understanding Performance Problems in CUDA Programs",
+        "url": "https://conf.researchr.org/details/fse-2026/fse-2026-research-papers/44/Understanding-Performance-Problems-in-CUDA-Programs"
+      },
+      {
+        "text": ", was accepted to FSE 2026."
+      }
+    ]
+  },
+  {
+    "date": "2025-12",
+    "content": [
+      {
+        "text": "Our CodeMap paper, "
+      },
+      {
+        "text": "Understanding Codebase like a Professional! Human–AI Collaboration for Code Comprehension",
+        "url": "https://gaojie058.github.io/code-map/"
+      },
+      {
+        "text": ", was accepted to ICPC 2026."
+      }
+    ]
+  },
+  {
+    "date": "2025-11",
+    "content": [
+      {
+        "text": "I attended "
+      },
+      {
+        "text": "EMNLP 2025",
+        "url": "https://2025.emnlp.org/"
+      },
+      {
+        "text": " in Suzhou, China, and enjoyed many inspiring conversations with fellow researchers and friends."
+      }
+    ]
+  },
+  {
+    "date": "2025-09",
+    "content": [
+      {
+        "text": "I joined Huawei’s Applied Software Engineering Lab, 2012 Lab, as a Senior Engineer in Shanghai."
+      }
+    ]
+  },
+  {
+    "date": "2025-04",
+    "content": [
+      {
+        "text": "Our paper, "
+      },
+      {
+        "text": "RegTrieve: Reducing System-Level Regression Errors for Machine Learning Systems via Retrieval-Enhanced Ensemble",
+        "url": "https://doi.org/10.1145/3729358"
+      },
+      {
+        "text": ", was accepted to FSE 2025."
+      }
+    ]
+  }
+]

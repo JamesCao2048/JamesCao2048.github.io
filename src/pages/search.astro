@@ -1,0 +1,67 @@
+---
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout title="Search" noindex>
+  <header class="page-heading">
+    <p class="eyebrow">Find something</p>
+    <h1>Search</h1>
+  </header>
+  <div class="search-container">
+    <form id="site-search" role="search" action="/search/">
+      <label class="search-label" for="search-query">Search the site</label>
+      <div class="search-input-row">
+        <input
+          id="search-query"
+          name="q"
+          type="search"
+          autocomplete="off"
+          placeholder="Search blogs, projects, and publications"
+          aria-describedby="search-status"
+        />
+        <button type="submit" class="button primary">Search</button>
+      </div>
+      <fieldset class="search-scopes">
+        <legend>Search in</legend>
+        {
+          ["Blogs", "Projects", "Publications"].map(category => (
+            <label>
+              <input
+                type="checkbox"
+                name="scope"
+                value={category.toLowerCase()}
+                checked
+              />{" "}
+              {category}
+            </label>
+          ))
+        }
+      </fieldset>
+    </form>
+    <p
+      id="search-status"
+      class="search-status"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    >
+      Enter a search term. All three sections are selected by default.
+    </p>
+    <div id="search-results" aria-busy="false"></div>
+    <p id="search-fallback" class="search-fallback" hidden>
+      Search could not load. Try again, or browse <a href="/writing/">Blogs</a>, <a
+        href="/projects/">Projects</a
+      >, and <a href="/publications/">Publications</a>.
+    </p>
+    <noscript
+      ><p>
+        Search needs JavaScript. Browse <a href="/writing/">Blogs</a>, <a
+          href="/projects/">Projects</a
+        >, or <a href="/publications/">Publications</a> instead.
+      </p></noscript
+    >
+  </div>
+</Layout>
+<script>
+  import "@/scripts/search";
+</script>

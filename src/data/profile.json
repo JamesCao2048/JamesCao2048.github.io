@@ -1,0 +1,142 @@
+{
+  "name": "Junming Cao",
+  "chineseName": "曹峻铭",
+  "role": "Senior Engineer",
+  "organization": "Huawei",
+  "location": "Shanghai, China",
+  "headline": "Coding Agent Harness & Post-Training",
+  "identity": "Senior Engineer at Huawei, Shanghai, China.",
+  "summary": "I build execution and verification infrastructure for coding agents. My current focus is human–agent auditing of training environments, task specifications, and verifiers for post-training.",
+  "featuredProjects": [
+    {
+      "slug": "post-training",
+      "title": "Post-Training Data & Evaluation",
+      "outcome": {
+        "text": "18.0% to 54.6% on SWE-bench Verified",
+        "highlights": ["18.0% to 54.6%"],
+        "detail": ""
+      }
+    },
+    {
+      "slug": "operator-migration",
+      "title": "Kernel Agent Harness",
+      "outcome": {
+        "text": "#1 on CannBench 910",
+        "highlights": ["#1 on CannBench 910"],
+        "detail": "Cannbot Lingxi-Evo · Aug–Sep 2026"
+      }
+    },
+    {
+      "slug": "deepperf",
+      "title": "DeepPerf",
+      "outcome": {
+        "text": "27 issues were fixed",
+        "highlights": ["27 issues were fixed"],
+        "detail": ""
+      }
+    }
+  ],
+  "experience": [
+    {
+      "organization": "Huawei",
+      "role": "Senior Engineer",
+      "period": "September 2025–Present",
+      "bullets": [
+        "Lead work on human–agent auditing of environments, task specifications, and verifiers for coding-agent post-training.",
+        "Designed and built a ScaleSWE-based post-training pipeline; fine-tuned Qwen3-30B-A3B-Instruct on 2,954 DeepSeek-v3.2 trajectories, improving SWE-bench Verified from 18.0% to 54.6% under the same AweAgent evaluation setup.",
+        "Led architecture and core development of shared execution and verification infrastructure for Ascend kernel generation, numerical debugging, and cross-generation migration.",
+        "Resolved 20+ GPU/NPU numerical-consistency issues in LLaMA-Factory and built regression tests for training-data handling and loss computation."
+      ]
+    },
+    {
+      "organization": "ByteDance · Momenta · Tencent Youtu AI Lab",
+      "role": "Engineering internships",
+      "period": "2017–2020",
+      "bullets": [
+        "ByteDance (2020): backend services for an advertising platform.",
+        "Momenta (2019–2020): an HD map compilation platform, spatial indexing, and search and routing APIs.",
+        "Tencent Youtu AI Lab (2017): image-collection pipelines for training data and model inference services."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Fudan University",
+      "degree": "PhD in Computer Science",
+      "period": "2021–2025",
+      "detail": "Advised by Bihuan Chen and Xin Peng."
+    },
+    {
+      "institution": "Singapore Management University",
+      "degree": "Visiting PhD student",
+      "period": "September 2022–March 2023",
+      "detail": "Research visit during my PhD at Fudan University."
+    },
+    {
+      "institution": "Shanghai Jiao Tong University",
+      "degree": "Master’s in Software Engineering",
+      "period": "2018–2021",
+      "detail": ""
+    },
+    {
+      "institution": "Shanghai Jiao Tong University",
+      "degree": "Bachelor’s in Software Engineering",
+      "period": "2014–2018",
+      "detail": ""
+    }
+  ],
+  "openSource": [
+    {
+      "title": "Cannbot Community",
+      "description": "Committer, cannbot community, since July 2026. The Cannbot community builds open-source coding-agent tools for Ascend NPU development in the CANN ecosystem. It brings together reusable skills, domain knowledge, and workflows for kernel development, model migration, and inference optimization. Contributed the Ascend kernel-migration orchestration engine and layered knowledge management.",
+      "url": "https://gitcode.com/cann/cannbot",
+      "links": [
+        {
+          "label": "Orchestration · PR #609",
+          "url": "https://gitcode.com/cann/cannbot-skills/pull/609"
+        },
+        {
+          "label": "Knowledge management · PR #611",
+          "url": "https://gitcode.com/cann/cannbot-skills/pull/611"
+        }
+      ]
+    },
+    {
+      "title": "MindStudio Agent",
+      "description": "Contributed a GPU/NPU training-diagnostics skill using msProbe to compare tensors layer by layer and investigate numerical differences.",
+      "url": "https://gitcode.com/Ascend/msagent/tree/master/skills/accuracy/rl-consistency-analysis",
+      "links": []
+    }
+  ],
+  "contacts": [
+    {
+      "label": "Email",
+      "url": "mailto:junmingcao@foxmail.com"
+    },
+    {
+      "label": "GitHub",
+      "url": "https://github.com/JamesCao2048"
+    },
+    {
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/in/junming-cao-520570116/"
+    },
+    {
+      "label": "Google Scholar",
+      "url": "https://scholar.google.com/citations?user=u2paHxEAAAAJ&hl=zh-CN"
+    }
+  ],
+  "skills": [
+    "LLM post-training",
+    "Training data generation and evaluation",
+    "Harness engineering",
+    "Executable task environments",
+    "Python",
+    "C++",
+    "Docker",
+    "Git",
+    "AWS",
+    "CI/CD"
+  ],
+  "educationLine": "PhD in Computer Science, Fudan University."
+}

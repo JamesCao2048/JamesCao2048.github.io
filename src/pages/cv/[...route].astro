@@ -1,0 +1,10 @@
+---
+import { cvPdfPath } from "@/utils/cv";
+
+export function getStaticPaths() {
+  return cvPdfPath ? [{ params: { route: undefined } }] : [];
+}
+
+if (!cvPdfPath) return new Response(null, { status: 404 });
+return Astro.redirect(cvPdfPath, 301);
+---
