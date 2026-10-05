@@ -2,7 +2,9 @@
 import publications from "@/data/publications.json";
 import HighlightedText from "@/components/HighlightedText.astro";
 
-const papers = publications.filter(paper => paper.selected);
+const papers = publications
+  .filter(paper => paper.selected)
+  .sort((a, b) => b.year - a.year);
 ---
 
 <section
