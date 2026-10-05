@@ -1,0 +1,60 @@
+---
+import publications from "@/data/publications.json";
+import HighlightedText from "@/components/HighlightedText.astro";
+
+const papers = publications.filter(paper => paper.selected);
+---
+
+<section
+  class="section selected-publications"
+  aria-labelledby="selected-publications"
+>
+  <div class="section-heading">
+    <h2 id="selected-publications">Selected publications</h2>
+    <a class="small-link" href="/publications/"> All publications </a>
+  </div>
+  <ul class="selected-paper-list">
+    {
+      papers.map(paper => (
+        <li>
+          <article class="selected-paper">
+            <p class="selected-paper-meta">
+              <span>
+                {paper.venue} · {paper.year}
+              </span>
+              <span>{paper.role}</span>
+            </p>
+            <h3>
+              <a href={paper.links.find(link => link.label === "Paper")?.url}>
+                {paper.title}
+              </a>
+            </h3>
+            {paper.description && (
+              <p class="selected-paper-description">
+                <HighlightedText
+                  text={paper.description}
+                  highlights={paper.highlights}
+                />
+              </p>
+            )}
+            {paper.award && (
+              <p class="award">
+                <span aria-hidden="true">✳</span> {paper.award}
+              </p>
+            )}
+          </article>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .selected-paper-description {
+    max-width: 78ch;
+    margin: 0.55rem 0 0;
+    color: var(--muted);
+    font-size: 0.88rem;
+    line-height: 1.75;
+  }
+</style>

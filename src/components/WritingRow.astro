@@ -1,0 +1,17 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { formatDate } from "@/utils/content";
+interface Props {
+  post: CollectionEntry<"writing">;
+}
+const { post } = Astro.props;
+---
+
+<article class="writing-row">
+  <time datetime={post.data.publishedAt!.toISOString()}
+    >{formatDate(post.data.publishedAt!)}</time
+  >
+  <h2><a href={`/writing/${post.data.slug}/`}>{post.data.title}</a></h2>
+  <p>{post.data.description}</p>
+  {post.data.lang === "zh" && <span class="badge">In Chinese</span>}
+</article>

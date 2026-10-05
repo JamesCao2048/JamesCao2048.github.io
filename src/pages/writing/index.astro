@@ -1,0 +1,36 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import WritingRow from "@/components/WritingRow.astro";
+import { getWriting } from "@/utils/content";
+const posts = await getWriting();
+---
+
+<Layout title="Blogs" description="Articles by Junming Cao.">
+  <header class="page-heading">
+    <p class="eyebrow">Notes from practice</p><h1>Blogs</h1>
+  </header>
+  {
+    posts.length ? (
+      posts.map(post => <WritingRow post={post} />)
+    ) : (
+      <section class="empty-state">
+        <>
+          <span class="empty-mark" aria-hidden="true">
+            [ &nbsp; ]
+          </span>
+          <h2>A space for what I learn.</h2>
+          <p>
+            No articles published here yet. In the meantime, my projects explain
+            the problems I’m working on and link to the underlying work.
+          </p>
+          <a class="text-link" href="/projects/">
+            Explore the projects
+          </a>
+        </>
+      </section>
+    )
+  }
+  <div class="writing-footer">
+    <a href="/rss.xml">RSS feed </a><a href="/search/">Search the site </a>
+  </div>
+</Layout>

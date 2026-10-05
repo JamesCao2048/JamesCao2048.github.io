@@ -1,0 +1,53 @@
+---
+interface Props {
+  item: { date: string; content: { text: string; url?: string }[] };
+}
+const { item } = Astro.props;
+const dateLabel = new Intl.DateTimeFormat("en", {
+  month: "short",
+  year: "numeric",
+  timeZone: "UTC",
+}).format(new Date(`${item.date}-01T00:00:00Z`));
+---
+
+<li class="news-item">
+  <time datetime={item.date}>{dateLabel}</time>
+  <p>
+    {
+      item.content.map(part =>
+        part.url ? <a href={part.url}>{part.text}</a> : part.text
+      )
+    }
+  </p>
+</li>
+
+<style>
+  .news-item {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: 1rem;
+    padding-block: 0.65rem;
+  }
+  time {
+    color: var(--muted);
+    font-size: 0.75rem;
+    padding-top: 0.15rem;
+  }
+  p {
+    font-size: 0.9rem;
+    line-height: 1.75;
+  }
+  a {
+    text-decoration: none;
+  }
+  a:hover,
+  a:focus-visible {
+    text-decoration: underline;
+  }
+  @media (max-width: 540px) {
+    .news-item {
+      grid-template-columns: 4.5rem minmax(0, 1fr);
+      gap: 0.65rem;
+    }
+  }
+</style>

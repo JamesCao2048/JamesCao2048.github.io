@@ -1,0 +1,30 @@
+---
+import type { CollectionEntry } from "astro:content";
+import HighlightedText from "@/components/HighlightedText.astro";
+import profile from "@/data/profile.json";
+interface Props {
+  project: CollectionEntry<"projects">;
+}
+const { project } = Astro.props;
+const { data } = project;
+const featured = profile.featuredProjects.find(item => item.slug === data.slug);
+---
+
+<article class="featured-project">
+  <p class="eyebrow">{data.scope.split(" · ")[0]}</p>
+  <h3>
+    <a href={`/projects/${data.slug}/`}>{featured?.title ?? data.title}</a>
+  </h3>
+  <p class="featured-summary">{data.description}</p>
+  {
+    featured?.outcome && (
+      <p class="project-outcome">
+        <HighlightedText
+          text={featured.outcome.text}
+          highlights={featured.outcome.highlights}
+        />
+        {featured.outcome.detail && <span>{featured.outcome.detail}</span>}
+      </p>
+    )
+  }
+</article>

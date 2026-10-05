@@ -1,0 +1,200 @@
+---
+import "@/styles/global.css";
+import { cvPdfPath } from "@/utils/cv";
+import profile from "@/data/profile.json";
+interface Props {
+  title?: string;
+  description?: string;
+  noindex?: boolean;
+  article?: boolean;
+  narrow?: boolean;
+  searchCategory?: "Blogs" | "Projects";
+}
+const {
+  title,
+  description = "Junming Cao — Senior Engineer at Huawei, working on coding agents and post-training. Execution and verification infrastructure, training data, evaluation, and ML reliability.",
+  noindex = false,
+  article = false,
+  narrow = false,
+  searchCategory,
+} = Astro.props;
+const siteTitle = `${profile.name} — ${profile.headline}`;
+const pageTitle = title ? `${title} · ${profile.name}` : siteTitle;
+const canonical = new URL(
+  /^\/404\/?$/.test(Astro.url.pathname) ? "/404.html" : Astro.url.pathname,
+  Astro.site
+);
+const links = [
+  { label: "Home", href: "/" },
+  { label: "Projects", href: "/projects/" },
+  { label: "Blogs", href: "/writing/" },
+  { label: "Publications", href: "/publications/" },
+  ...(cvPdfPath ? [{ label: "CV", href: cvPdfPath }] : []),
+];
+---
+
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="Junming Cao" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="theme-color" content="#fcfaf7" />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=red-brown-v1" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Junming Cao — Blogs"
+      href="/rss.xml"
+    />
+    <meta property="og:type" content={article ? "article" : "website"} />
+    <meta property="og:site_name" content="Junming Cao" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL("/og.png", Astro.site)} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={siteTitle} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL("/og.png", Astro.site)} />
+    <script is:inline>
+      try {
+        if (localStorage.getItem("theme") === "dark")
+          document.documentElement.dataset.theme = "dark";
+      } catch {}
+    </script>
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header shell" data-pagefind-ignore>
+      <a class="wordmark" href="/" aria-label="Junming Cao — Home"
+        ><span class="monogram" aria-hidden="true">jc.</span><span
+          >Junming Cao</span
+        ></a
+      >
+      <div class="nav-wrap">
+        <nav aria-label="Main navigation">
+          {
+            links.map(link => (
+              <a
+                href={link.href}
+                aria-current={
+                  (
+                    link.href === "/"
+                      ? Astro.url.pathname === "/"
+                      : Astro.url.pathname.startsWith(link.href)
+                  )
+                    ? "page"
+                    : undefined
+                }
+              >
+                {link.label}
+              </a>
+            ))
+          }
+        </nav>
+        <div class="header-tools">
+          <a
+            class="search-button"
+            href="/search/"
+            aria-current={Astro.url.pathname === "/search/"
+              ? "page"
+              : undefined}
+          >
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              aria-hidden="true"
+              ><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m16 16 5 5"
+              ></path></svg
+            >
+            <span>Search</span>
+          </a>
+          <button
+            id="theme-btn"
+            class="theme-button"
+            aria-label="Switch to dark theme"
+            aria-pressed="false"
+            hidden
+          >
+            <svg
+              class="moon"
+              width="19"
+              height="19"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-hidden="true"
+              ><path
+                d="M20.7 13.1A8.7 8.7 0 0 1 10.9 3.3a8.8 8.8 0 1 0 9.8 9.8Z"
+              ></path></svg
+            >
+            <svg
+              class="sun"
+              width="19"
+              height="19"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-hidden="true"
+              ><circle cx="12" cy="12" r="4"></circle><path
+                d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"
+              ></path></svg
+            >
+          </button>
+        </div>
+      </div>
+    </header>
+    <main
+      id="main-content"
+      tabindex="-1"
+      class:list={["shell", { narrow }]}
+      data-pagefind-body={(!noindex && Boolean(searchCategory)) || undefined}
+      data-search-category={searchCategory}
+      data-pagefind-filter={searchCategory && `category:${searchCategory}`}
+      data-pagefind-meta={searchCategory && `category:${searchCategory}`}
+    >
+      <slot />
+    </main>
+    <footer class="site-footer shell" data-pagefind-ignore>
+      <div>
+        <a class="footer-name" href="/">Junming Cao</a>
+      </div>
+      <div class="footer-links">
+        {
+          profile.contacts
+            .filter(c =>
+              ["Email", "GitHub", "LinkedIn", "Google Scholar"].includes(
+                c.label
+              )
+            )
+            .map(c => <a href={c.url}>{c.label}</a>)
+        }<a href="/rss.xml">RSS</a>
+      </div>
+      <span class="colophon"
+        >Built with <a href="https://astro.build/">Astro</a> &amp; <a
+          href="https://github.com/satnaing/astro-paper">AstroPaper</a
+        >.</span
+      >
+    </footer>
+    <script>
+      import "@/scripts/theme";
+    </script>
+  </body>
+</html>

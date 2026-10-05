@@ -1,0 +1,43 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import routes from "@/data/legacy-routes.json";
+// Preserve only inventoried URLs; unknown addresses keep a real 404.
+export function getStaticPaths() {
+  return routes
+    .filter(route => route.kind.startsWith("retired-"))
+    .map(route => ({
+      params: { legacy: route.path.replace(/^\/|\/$/g, "") },
+      props: { route },
+    }));
+}
+const { route } = Astro.props;
+const isBlog = route.kind === "retired-blog";
+---
+
+<Layout
+  title={isBlog
+    ? "The previous blog has been retired"
+    : "This page has been retired"}
+  description="This address belongs to an earlier version of Junming Cao’s website. Explore current projects, blogs, and publications."
+  noindex
+>
+  <section class="empty-state not-found">
+    <p class="eyebrow">From the previous website</p><h1>
+      {
+        isBlog
+          ? "The previous blog has been retired."
+          : "This page has been retired."
+      }
+    </h1><p>
+      {
+        isBlog
+          ? "The old blog posts are no longer available here. This site now brings together my current engineering work, research, and future writing."
+          : "This address was part of an earlier website. You can find my current work and publications below."
+      }
+    </p><div class="hero-actions">
+      <a class="button primary" href={route.target}
+        >{route.target === "/" ? "Go home" : "Explore projects"}
+      </a><a class="button secondary" href="/writing/">Blogs</a>
+    </div>
+  </section>
+</Layout>

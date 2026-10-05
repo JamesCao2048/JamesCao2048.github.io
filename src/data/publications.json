@@ -1,0 +1,367 @@
+[
+  {
+    "id": "code-refinement",
+    "title": "Exploring the Potential of ChatGPT in Automated Code Refinement: An Empirical Study",
+    "authors": "Qi Guo, Junming Cao, Xiaofei Xie, Shangqing Liu, Xiaohong Li, Bihuan Chen, Xin Peng",
+    "venue": "ICSE",
+    "year": 2024,
+    "role": "Co-first author",
+    "selected": true,
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://doi.org/10.1145/3597503.3623306"
+      },
+      {
+        "label": "Preprint",
+        "url": "https://arxiv.org/abs/2309.08221"
+      }
+    ],
+    "description": "Built CodeReview-New, a 14,568-example benchmark for code refinement from review comments. Compared ChatGPT with CodeReviewer and analysed 400 cases, identifying missing domain knowledge and ambiguous edit locations or review intent as major sources of failure.",
+    "highlights": ["14,568-example benchmark", "400 cases"]
+  },
+  {
+    "id": "deepperf",
+    "title": "Understanding Performance Problems in Deep Learning Systems",
+    "authors": "Junming Cao, Bihuan Chen, Chao Sun, Longjie Hu, Shuaihong Wu, Xin Peng",
+    "venue": "ESEC/FSE",
+    "year": 2022,
+    "role": "First author",
+    "selected": true,
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://doi.org/10.1145/3540250.3549123"
+      },
+      {
+        "label": "Project",
+        "url": "https://dlperf.github.io/"
+      },
+      {
+        "label": "Preprint",
+        "url": "https://arxiv.org/abs/2112.01771"
+      }
+    ],
+    "description": "Studied 224 performance problems and built a 58-case reproducible benchmark. Developed DeepPerf, a rule-based static checker; evaluation on 1,108 open-source repositories identified 488 new issues, of which 27 were fixed.",
+    "highlights": [
+      "58-case reproducible benchmark",
+      "488 new issues",
+      "27 were fixed"
+    ]
+  },
+  {
+    "id": "codemap",
+    "title": "Understanding Codebase like a Professional! Human–AI Collaboration for Code Comprehension",
+    "authors": "Jie Gao, Yue Xue, Xiaofei Xie, Junming Cao, SoeMin Thant, Erika Lee, Bowen Xu",
+    "venue": "ICPC",
+    "year": 2026,
+    "role": "Co-author",
+    "selected": true,
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://doi.org/10.1145/3794763.3794822"
+      },
+      {
+        "label": "Project",
+        "url": "https://gaojie058.github.io/code-map/"
+      },
+      {
+        "label": "Award",
+        "url": "https://csc.ncsu.edu/2026/06/bowen-xu-wins-acm-sigsoft-distinguished-paper-award/"
+      }
+    ],
+    "award": "ACM SIGSOFT Distinguished Paper Award",
+    "description": "Co-authored a study of how professionals understand unfamiliar codebases, based on interviews with eight code auditors. The findings informed CodeMap, an LLM-powered system with hierarchical codebase visualisations and interactive navigation. Among experienced developers, CodeMap reduced time spent reading LLM responses by 79%.",
+    "highlights": ["CodeMap", "79%"]
+  },
+  {
+    "id": "regtrieve",
+    "title": "RegTrieve: Reducing System-Level Regression Errors for Machine Learning Systems via Retrieval-Enhanced Ensemble",
+    "authors": "Junming Cao, Xuwen Xiang, Mingfei Cheng, Bihuan Chen, Xinyan Wang, You Lu, Chaofeng Sha, Xiaofei Xie, Xin Peng",
+    "venue": "FSE",
+    "year": 2025,
+    "role": "First author",
+    "selected": true,
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://doi.org/10.1145/3729358"
+      }
+    ],
+    "description": "Developed RegTrieve, a retrieval-enhanced ensemble that dynamically combines old and updated models to reduce system-level regression errors in multi-model machine-learning systems.",
+    "highlights": ["RegTrieve", "system-level regression errors"]
+  },
+  {
+    "id": "cuda-performance",
+    "title": "Understanding Performance Problems in CUDA Programs",
+    "authors": "Yuyang Bi, Junming Cao, You Lu, Bihuan Chen, Tianwei Gan, Dingji Wang, Xin Peng",
+    "venue": "FSE",
+    "year": 2026,
+    "role": "Second author",
+    "selected": false,
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://doi.org/10.1145/3797143"
+      },
+      {
+        "label": "Conference",
+        "url": "https://conf.researchr.org/details/fse-2026/fse-2026-research-papers/44/Understanding-Performance-Problems-in-CUDA-Programs"
+      }
+    ],
+    "highlights": []
+  },
+  {
+    "id": "dependency-bugs",
+    "title": "Demystifying Dependency Bugs in Deep Learning Stack",
+    "authors": "Kaifeng Huang, Bihuan Chen, Susheng Wu, Junming Cao, Lei Ma, Xin Peng",
+    "venue": "ESEC/FSE",
+    "year": 2023,
+    "role": "Co-author",
+    "selected": false,
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://doi.org/10.1145/3611643.3616325"
+      },
+      {
+        "label": "Project",
+        "url": "https://dl-dep.github.io/"
+      }
+    ],
+    "highlights": []
+  },
+  {
+    "id": "mram",
+    "title": "Locating Faulty Methods with a Mixed RNN and Attention Model",
+    "authors": "Shouliang Yang, Junming Cao, Hushuang Zeng, Beijun Shen, Hao Zhong",
+    "venue": "ICPC",
+    "year": 2021,
+    "role": "Co-author",
+    "selected": false,
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://doi.org/10.1109/ICPC52881.2021.00028"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/OrthrusFL/MRAM"
+      }
+    ],
+    "highlights": []
+  },
+  {
+    "id": "bugpecker",
+    "title": "BugPecker: Locating Faulty Methods with Deep Learning on Revision Graphs",
+    "authors": "Junming Cao, Shouliang Yang, Wenhui Jiang, Hushuang Zeng, Beijun Shen, Hao Zhong",
+    "venue": "ASE · New Ideas and Emerging Results",
+    "year": 2020,
+    "role": "First author",
+    "selected": false,
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://doi.org/10.1145/3324884.3418934"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/RAddRiceee/BugPecker"
+      }
+    ],
+    "highlights": []
+  },
+  {
+    "id": "cocoqa",
+    "title": "CocoQa: Question Answering for Coding Conventions Over Knowledge Graphs",
+    "authors": "Tianjiao Du, Junming Cao, Qinyue Wu, Wei Li, Beijun Shen, Yuting Chen",
+    "venue": "ASE · Tool Demonstrations",
+    "year": 2019,
+    "role": "Co-author",
+    "selected": false,
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://doi.org/10.1109/ASE.2019.00108"
+      },
+      {
+        "label": "Code",
+        "url": "https://github.com/14dtj/CocoQa"
+      }
+    ],
+    "highlights": []
+  },
+  {
+    "id": "coding-conventions",
+    "title": "Constructing a Knowledge Base of Coding Conventions from Online Resources",
+    "authors": "Junming Cao, Tianjiao Du, Beijun Shen, Wei Li, Qinyue Wu, Yuting Chen",
+    "venue": "SEKE",
+    "year": 2019,
+    "role": "First author",
+    "selected": false,
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://doi.org/10.18293/SEKE2019-123"
+      }
+    ],
+    "highlights": []
+  },
+  {
+    "id": "crowdevbot",
+    "title": "CrowDevBot: A Task-Oriented Conversational Bot for Software Crowdsourcing Platform",
+    "authors": "Zeyu Ni, Zhangyuan Meng, Junming Cao, Beijun Shen, Yuting Chen",
+    "venue": "SEKE",
+    "year": 2019,
+    "role": "Co-author",
+    "selected": false,
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://doi.org/10.18293/SEKE2019-068"
+      },
+      {
+        "label": "Proceedings PDF",
+        "url": "https://ksiresearch.org/seke/seke19paper/seke19paper_68.pdf"
+      }
+    ],
+    "highlights": []
+  },
+  {
+    "id": "llm-supply-chain",
+    "title": "Lifting the Veil on Composition, Risks, and Mitigations of the Large Language Model Supply Chain",
+    "authors": "Kaifeng Huang, Bihuan Chen, You Lu, Susheng Wu, Dingji Wang, Yiheng Huang, Haowen Jiang, Zhuotong Zhou, Junming Cao, Xin Peng",
+    "venue": "ACM TOSEM",
+    "year": 2026,
+    "role": "Co-author",
+    "selected": false,
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://doi.org/10.1145/3830903"
+      },
+      {
+        "label": "Preprint",
+        "url": "https://arxiv.org/abs/2410.21218"
+      }
+    ],
+    "highlights": []
+  },
+  {
+    "id": "human-llm-interaction-taxonomy",
+    "title": "A Taxonomy for Human-LLM Interaction Modes",
+    "authors": "Jie Gao, Erika Lee, Zhiyao Shu, Michelle Vaccaro, Xiaoxian Zhang, Junming Cao, Thomas Malone",
+    "venue": "Manuscript",
+    "year": 2025,
+    "role": "Co-author",
+    "selected": false,
+    "links": [
+      {
+        "label": "Scholar record",
+        "url": "https://scholar.google.com/citations?view_op=view_citation&user=u2paHxEAAAAJ&citation_for_view=u2paHxEAAAAJ:5nxA0vEk-isC"
+      }
+    ],
+    "highlights": []
+  },
+  {
+    "id": "coaicoder",
+    "title": "CoAIcoder: Examining the Effectiveness of AI-assisted Human-to-Human Collaboration in Qualitative Analysis",
+    "authors": "Jie Gao, Kenny Tsu Wei Choo, Junming Cao, Roy Ka-Wei Lee, Simon Perrault",
+    "venue": "ACM TOCHI",
+    "year": 2023,
+    "role": "Co-author",
+    "selected": false,
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://doi.org/10.1145/3617362"
+      },
+      {
+        "label": "Preprint",
+        "url": "https://arxiv.org/abs/2304.05560"
+      }
+    ],
+    "highlights": []
+  },
+  {
+    "id": "qualitative-coding-trust",
+    "title": "Impact of Human-AI Interaction on User Trust and Reliance in AI-Assisted Qualitative Coding",
+    "authors": "Jie Gao, Junming Cao, ShunYi Yeo, Kenny Tsu Wei Choo, Zheng Zhang, Toby Jia-Jun Li, Shengdong Zhao, Simon Tangi Perrault",
+    "venue": "arXiv preprint",
+    "year": 2023,
+    "role": "Co-author",
+    "selected": false,
+    "links": [
+      {
+        "label": "Preprint",
+        "url": "https://arxiv.org/abs/2309.13858"
+      }
+    ],
+    "highlights": []
+  },
+  {
+    "id": "ml-system-complexity",
+    "title": "Characterizing the Complexity and Its Impact on Testing in ML-Enabled Systems: A Case Study on Rasa",
+    "authors": "Junming Cao, Bihuan Chen, Longjie Hu, Jie Gao, Kaifeng Huang, Xuezhi Song, Xin Peng",
+    "venue": "ICSME",
+    "year": 2023,
+    "role": "First author",
+    "selected": false,
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://doi.org/10.1109/ICSME58846.2023.00034"
+      }
+    ],
+    "highlights": []
+  },
+  {
+    "id": "robotic-fault-diagnosis",
+    "title": "An Empirical Study on Fault Diagnosis in Robotic Systems",
+    "authors": "Xuezhi Song, Yi Li, Zhen Dong, Shuning Liu, Junming Cao, Xin Peng",
+    "venue": "ICSME",
+    "year": 2023,
+    "role": "Co-author",
+    "selected": false,
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://doi.org/10.1109/ICSME58846.2023.00030"
+      }
+    ],
+    "highlights": []
+  },
+  {
+    "id": "bugminer",
+    "title": "BugMiner: Automating Precise Bug Dataset Construction by Code Evolution History Mining",
+    "authors": "Xuezhi Song, Yijian Wu, Junming Cao, Bihuan Chen, Yun Lin, Zhengjie Lu, Dingji Wang, Xin Peng",
+    "venue": "ASE · Industry Challenge",
+    "year": 2023,
+    "role": "Co-author",
+    "selected": false,
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://doi.org/10.1109/ASE56229.2023.00201"
+      }
+    ],
+    "highlights": []
+  },
+  {
+    "id": "working-from-home",
+    "title": "Differences of Challenges of Working from Home (WFH) between Weibo and Twitter Users during COVID-19",
+    "authors": "Jie Gao, Xiayin Ying, Junming Cao, Yifan Yang, Pin Sym Foong, Simon Perrault",
+    "venue": "CHI · Extended Abstracts",
+    "year": 2022,
+    "role": "Co-author",
+    "selected": false,
+    "links": [
+      {
+        "label": "Paper",
+        "url": "https://doi.org/10.1145/3491101.3519790"
+      }
+    ],
+    "highlights": []
+  }
+]

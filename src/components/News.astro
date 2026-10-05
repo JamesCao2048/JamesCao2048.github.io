@@ -1,0 +1,72 @@
+---
+import news from "@/data/news.json";
+import NewsItem from "@/components/NewsItem.astro";
+for (const item of news) {
+  if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(item.date)) {
+    throw new Error(`News date must use YYYY-MM: ${item.date}`);
+  }
+}
+const sortedNews = [...news].sort((a, b) => b.date.localeCompare(a.date));
+const recent = sortedNews.slice(0, 5);
+const older = sortedNews.slice(5);
+---
+
+{
+  recent.length > 0 && (
+    <section class="section news" aria-labelledby="news">
+      <div class="section-heading">
+        <h2 id="news">News</h2>
+      </div>
+      <ul class="news-list">
+        {recent.map(item => (
+          <NewsItem item={item} />
+        ))}
+      </ul>
+      {older.length > 0 && (
+        <details>
+          <summary>
+            <span class="when-closed">More news ({older.length})</span>
+            <span class="when-open">Less news</span>
+          </summary>
+          <ul class="news-list">
+            {older.map(item => (
+              <NewsItem item={item} />
+            ))}
+          </ul>
+        </details>
+      )}
+    </section>
+  )
+}
+
+<style>
+  .news-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .section-heading {
+    margin-bottom: 0.5rem;
+  }
+  details {
+    margin-top: 0.6rem;
+  }
+  summary {
+    width: fit-content;
+    cursor: pointer;
+    color: var(--accent);
+    font-size: 0.8rem;
+    padding-block: 0.4rem;
+  }
+  summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+  .when-open,
+  details[open] .when-closed {
+    display: none;
+  }
+  details[open] .when-open {
+    display: inline;
+  }
+</style>

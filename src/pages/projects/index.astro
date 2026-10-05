@@ -1,0 +1,25 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import ProjectCard from "@/components/ProjectCard.astro";
+import { getProjects } from "@/utils/content";
+const projects = await getProjects();
+---
+
+<Layout
+  title="Projects"
+  description="Projects in coding-agent post-training, Ascend kernel engineering, and software-engineering research."
+>
+  <header class="page-heading">
+    <p class="eyebrow">Project library</p><h1>Projects</h1><p>
+      Engineering projects and research tools, with my role, the approach,
+      results, and public resources where available.
+    </p>
+  </header>
+  <div class="project-list">
+    {
+      projects.map((project, index) => (
+        <ProjectCard project={project} index={index} headingLevel="h2" />
+      ))
+    }
+  </div>
+</Layout>

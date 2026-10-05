@@ -1,0 +1,51 @@
+---
+import { render } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import { getProjects } from "@/utils/content";
+export async function getStaticPaths() {
+  return (await getProjects()).map(project => ({
+    params: { slug: project.data.slug },
+    props: { project },
+  }));
+}
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<Layout
+  title={project.data.title}
+  description={project.data.description}
+  narrow
+  article
+  searchCategory="Projects"
+>
+  <header class="article-heading">
+    <a class="back-link" href="/projects/"> Projects</a><p class="eyebrow">
+      {project.data.scope}
+    </p><h1>{project.data.title}</h1><p class="article-deck">
+      {project.data.description}
+    </p><dl class="project-meta">
+      <div><dt>Role</dt><dd>{project.data.role}</dd></div><div>
+        <dt>Focus</dt><dd>{project.data.scope}</dd>
+      </div>
+    </dl>
+  </header>
+  <article class="prose"><Content /></article>
+  {
+    project.data.evidenceLinks.length > 0 && (
+      <aside class="evidence">
+        <>
+          <h2>Explore the work</h2>
+          <ul>
+            {project.data.evidenceLinks.map(link => (
+              <li>
+                <a href={link.url}>{link.label}</a>
+              </li>
+            ))}
+          </ul>
+        </>
+      </aside>
+    )
+  }
+  <a class="text-link" href="/projects/"> All projects</a>
+</Layout>

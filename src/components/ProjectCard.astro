@@ -1,0 +1,39 @@
+---
+import type { CollectionEntry } from "astro:content";
+interface Props {
+  project: CollectionEntry<"projects">;
+  index?: number;
+  headingLevel?: "h2" | "h3";
+}
+const { project, index = 0, headingLevel = "h3" } = Astro.props;
+const Heading = headingLevel;
+const { data } = project;
+---
+
+<article class="project-row">
+  <span class="project-number" aria-hidden="true"
+    >{String(index + 1).padStart(2, "0")}</span
+  >
+  <div class="project-main">
+    <p class="eyebrow">{data.scope}</p><Heading class="project-title">
+      <a href={`/projects/${data.slug}/`}>{data.title}</a>
+    </Heading><p>{data.description}</p><div class="project-bottom">
+      <span>{data.role}</span><a
+        href={`/projects/${data.slug}/`}
+        aria-label={`View ${data.title}`}
+        >Project details
+      </a>
+    </div>
+    {
+      data.evidenceLinks.length > 0 && (
+        <ul class="project-evidence-links" aria-label="Public evidence">
+          {data.evidenceLinks.slice(0, 2).map(link => (
+            <li>
+              <a href={link.url}>{link.label}</a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </div>
+</article>
