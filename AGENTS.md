@@ -39,7 +39,7 @@ This is Junming Cao's English personal website, built with Astro and AstroPaper.
 
 ## Publications and CV
 
-- Homepage Selected Publications are the four approved CV papers in the CV order: Code Refinement, DeepPerf, CodeMap, RegTrieve. Include their substantive CV descriptions.
+- Homepage Selected Publications retain the same four approved papers, sorted by publication year from newest to oldest: CodeMap (2026), RegTrieve (2025), Code Refinement (2024), DeepPerf (2022). Include their substantive CV descriptions; do not use CV order for the website list.
 - The full Publications page is one bibliography sorted by descending year, without descriptions or Selected/Earlier subgroups. Do not restore the generic introductory research slogan.
 - Include the user's co-authored work as well as first-authored work. Google Scholar is an inventory source; verify identity, author order, venue and formal versions using publisher or author records. Do not import unrelated papers by namesakes or every paper written by a collaborator.
 - Deduplicate preprint and published versions. Prefer confirmed formal publication metadata, record online/print-year choices, and label unverified-venue manuscripts or arXiv preprints honestly. Do not attach a venue from a different similarly titled paper.
