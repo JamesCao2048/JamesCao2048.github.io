@@ -938,6 +938,14 @@ nav a[aria-current="page"] {
 .publication-list > li[id]:target {
   background: var(--accent-soft);
 }
+@media (max-width: 374px) {
+  .site-header .wordmark {
+    font-size: 0.8rem;
+  }
+  .search-button span {
+    display: none;
+  }
+}
 @media (max-width: 767px) {
   :root {
     font-size: 17px;
@@ -1203,7 +1211,8 @@ nav a[aria-current="page"] {
     height: 80px;
     border-radius: 8px;
   }
-  .hero > :not(.hero-portrait) {
+  .hero > .hero-bio,
+  .hero > .hero-summary {
     grid-column: 1 / -1;
   }
   .hero h1 {

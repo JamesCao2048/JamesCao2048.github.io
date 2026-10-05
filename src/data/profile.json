@@ -1,12 +1,12 @@
 {
-  "name": "Junming Cao",
+  "name": "Junming (James) Cao",
   "chineseName": "曹峻铭",
   "role": "Senior Engineer",
   "organization": "Huawei",
   "location": "Shanghai, China",
   "headline": "Coding Agent Harness & Post-Training",
   "identity": "Senior Engineer at Huawei, Shanghai, China.",
-  "summary": "I build execution and verification infrastructure for coding agents. My current focus is human–agent auditing of training environments, task specifications, and verifiers for post-training.",
+  "summary": "Hi, I’m Junming Cao (曹峻铭), and I also go by James. I build execution and verification infrastructure for coding agents. My current focus is human–agent auditing of training environments, task specifications, and verifiers for post-training.",
   "featuredProjects": [
     {
       "slug": "post-training",

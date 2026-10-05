@@ -15,6 +15,7 @@ This is Junming Cao's English personal website, built with Astro and AstroPaper.
 ## Homepage and navigation
 
 - Include Home, Projects, Blogs, Publications and the direct PDF CV entry. Keep existing `/writing/` URLs when changing the visible Blogs label.
+- Use `Junming (James) Cao` for the site display name and linked header name. The homepage introduction starts with `Hi, I’m Junming Cao (曹峻铭), and I also go by James.` before the work summary. Keep scholarly author credits as `Junming Cao`, matching the published papers.
 - Hero headline: `Coding Agent Harness & Post-Training`. Keep the portrait, followed by `Senior Engineer at Huawei, Shanghai, China.` and `PhD in Computer Science, Fudan University.` as separate identity lines.
 - Do not restore the separate Senior Engineer eyebrow, duplicate Shanghai badge, hero CV button, Current Work section, separate ongoing-work card, or repetitive reliable-systems/contact slogans.
 - News is above Selected Projects. Show the latest five news items, with older entries in a native disclosure. The user confirmed July 2026 Cannbot committer status, November 2025 attendance at EMNLP in Suzhou, and planned attendance at NeurIPS 2026 in Sydney in December. Keep the future attendance wording explicit; its October 2026 News date records the announcement month.
