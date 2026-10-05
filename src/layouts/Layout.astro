@@ -54,7 +54,7 @@ const links = [
       href="/rss.xml"
     />
     <meta property="og:type" content={article ? "article" : "website"} />
-    <meta property="og:site_name" content="Junming Cao" />
+    <meta property="og:site_name" content={profile.name} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
@@ -77,9 +77,9 @@ const links = [
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
     <header class="site-header shell" data-pagefind-ignore>
-      <a class="wordmark" href="/" aria-label="Junming Cao — Home"
+      <a class="wordmark" href="/" aria-label={`${profile.name} — Home`}
         ><span class="monogram" aria-hidden="true">jc.</span><span
-          >Junming Cao</span
+          >{profile.name}</span
         ></a
       >
       <div class="nav-wrap">
@@ -107,6 +107,7 @@ const links = [
           <a
             class="search-button"
             href="/search/"
+            aria-label="Search"
             aria-current={Astro.url.pathname === "/search/"
               ? "page"
               : undefined}
@@ -174,7 +175,7 @@ const links = [
     </main>
     <footer class="site-footer shell" data-pagefind-ignore>
       <div>
-        <a class="footer-name" href="/">Junming Cao</a>
+        <a class="footer-name" href="/">{profile.name}</a>
       </div>
       <div class="footer-links">
         {
