@@ -3,6 +3,21 @@
     "date": "2026-10",
     "content": [
       {
+        "text": "I’ll be attending the "
+      },
+      {
+        "text": "CANNBench Season 1 Meetup",
+        "url": "https://mp.weixin.qq.com/s/44OpeWGgXUQkScVgmFg0ZA"
+      },
+      {
+        "text": " in Nanjing on October 17, 2026, where our team, Cannbot Lingxi-Evo, will present our agent-based approach to kernel generation and optimization. We ranked #1 on the CANNBench A3 leaderboard for July–September 2026."
+      }
+    ]
+  },
+  {
+    "date": "2026-10",
+    "content": [
+      {
         "text": "I’ll be attending "
       },
       {
