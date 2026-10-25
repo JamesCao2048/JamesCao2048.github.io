@@ -1,5 +1,6 @@
 ---
 import "@/styles/global.css";
+import GoogleAnalytics from "@/components/GoogleAnalytics.astro";
 import { cvPdfPath } from "@/utils/cv";
 import profile from "@/data/profile.json";
 interface Props {
@@ -63,6 +64,7 @@ const links = [
 <html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
+    {import.meta.env.PROD && <GoogleAnalytics />}
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />

@@ -1,0 +1,16 @@
+<script is:inline>
+  // Keep local previews and development visits out of the reports.
+  if (window.location.origin === "https://jamescao2048.github.io") {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () {
+      window.dataLayer.push(arguments);
+    };
+    window.gtag("js", new Date());
+    window.gtag("config", "G-RGB73YNS3F");
+
+    const tag = document.createElement("script");
+    tag.async = true;
+    tag.src = "https://www.googletagmanager.com/gtag/js?id=G-RGB73YNS3F";
+    document.head.appendChild(tag);
+  }
+</script>
