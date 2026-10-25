@@ -231,6 +231,46 @@ function elementContents(html, name) {
   ].map(match => match[0]);
 }
 
+function assertOriginalSourceRendered(note, original, label) {
+  const text = readableText(note);
+  assert(
+    text.includes(normalizeText(original.platform)),
+    `${label}: original platform`
+  );
+  assert(
+    htmlTags(note).some(
+      tag =>
+        tag.name === "a" &&
+        tag.attributes.href === original.url &&
+        tag.attributes.title === original.title &&
+        /^https?:\/\//.test(tag.attributes.href)
+    ),
+    `${label}: original article link and title`
+  );
+  const dates = elementContents(note, "time");
+  assert.equal(
+    dates.length,
+    original.publishedAt ? 1 : 0,
+    `${label}: show original date only when known`
+  );
+  if (original.publishedAt) {
+    const originalDate = new Date(original.publishedAt);
+    assert.equal(
+      htmlTags(dates[0])[0].attributes.datetime,
+      originalDate.toISOString(),
+      `${label}: original publication date`
+    );
+    assert.equal(
+      readableText(dates[0]),
+      new Intl.DateTimeFormat("en", {
+        dateStyle: "long",
+        timeZone: "UTC",
+      }).format(originalDate),
+      `${label}: visible original date`
+    );
+  }
+}
+
 function assertWritingRendered(listing, detail, entry) {
   const route = `/writing/${entry.data.slug}/`;
   const hasLink = html =>
@@ -278,6 +318,8 @@ function assertWritingRendered(listing, detail, entry) {
     htmlTags(element).some(tag => "data-original-source" in tag.attributes)
   );
   const original = entry.data.originalSource;
+  const originals = entry.data.originalSources;
+  assert(!(original && originals), `${route}: use one source metadata field`);
   assert.equal(
     sourceNotes.length,
     original ? 1 : 0,
@@ -287,40 +329,48 @@ function assertWritingRendered(listing, detail, entry) {
     const note = sourceNotes[0];
     const text = readableText(note);
     assert(text.includes("English adaptation"), `${route}: adaptation label`);
+    assertOriginalSourceRendered(note, original, route);
+  }
+  const sourceGroups = elementContents(detail, "aside").filter(
+    element => "data-original-sources" in htmlTags(element)[0].attributes
+  );
+  assert.equal(
+    sourceGroups.length,
+    originals ? 1 : 0,
+    `${route}: original-sources group matches article metadata`
+  );
+  if (originals) {
     assert(
-      text.includes(normalizeText(original.platform)),
-      `${route}: original platform`
+      Array.isArray(originals) && originals.length > 0,
+      `${route}: originalSources must be a nonempty array`
     );
-    assert(
-      htmlTags(note).some(
-        tag =>
-          tag.name === "a" &&
-          tag.attributes.href === original.url &&
-          tag.attributes.title === original.title &&
-          /^https?:\/\//.test(tag.attributes.href)
-      ),
-      `${route}: original article link and title`
+    const group = sourceGroups[0];
+    const label =
+      originals.length > 1
+        ? "English adaptation combining multiple Chinese originals:"
+        : "English adaptation of the following Chinese original:";
+    assert(readableText(group).includes(label), `${route}: adaptation label`);
+    const notes = elementContents(group, "li").filter(
+      element => "data-original-source" in htmlTags(element)[0].attributes
     );
-    const dates = elementContents(note, "time");
     assert.equal(
-      dates.length,
-      original.publishedAt ? 1 : 0,
-      `${route}: show original date only when known`
+      notes.length,
+      originals.length,
+      `${route}: every original source has a separate list item`
     );
-    if (original.publishedAt) {
-      const originalDate = new Date(original.publishedAt);
+    for (const [index, source] of originals.entries()) {
+      const note = notes[index];
+      const link = elementContents(note, "a")[0];
+      assert(link, `${route}: source ${index + 1} title link`);
       assert.equal(
-        htmlTags(dates[0])[0].attributes.datetime,
-        originalDate.toISOString(),
-        `${route}: original publication date`
+        readableText(link),
+        `Chinese original ${index + 1}`,
+        `${route}: source ${index + 1} visible label`
       );
-      assert.equal(
-        readableText(dates[0]),
-        new Intl.DateTimeFormat("en", {
-          dateStyle: "long",
-          timeZone: "UTC",
-        }).format(originalDate),
-        `${route}: visible original date`
+      assertOriginalSourceRendered(
+        note,
+        source,
+        `${route}: source ${index + 1}`
       );
     }
   }
