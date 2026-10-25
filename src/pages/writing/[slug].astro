@@ -16,6 +16,9 @@ const { Content } = await render(post);
   title={post.data.title}
   description={post.data.description}
   searchCategory="Blogs"
+  articleType="BlogPosting"
+  publishedAt={post.data.publishedAt}
+  updatedAt={post.data.updatedAt}
   narrow
   article
 >
@@ -25,6 +28,7 @@ const { Content } = await render(post);
     </p><h1>{post.data.title}</h1><p class="article-deck">
       {post.data.description}
     </p><p class="date-line">
+      By <a href="/" rel="author">Junming Cao</a> ·
       <time datetime={post.data.publishedAt!.toISOString()}
         >{formatDate(post.data.publishedAt!)}</time
       >{

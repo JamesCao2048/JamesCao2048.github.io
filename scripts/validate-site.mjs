@@ -231,6 +231,106 @@ function elementContents(html, name) {
   ].map(match => match[0]);
 }
 
+function assertArticleMetadata(page, entry) {
+  const { html, tags, route } = page;
+  const structuredData = elementContents(html, "script")
+    .filter(
+      script => htmlTags(script)[0].attributes.type === "application/ld+json"
+    )
+    .map(script => {
+      const json = script
+        .replace(/^<script\b[^>]*>/i, "")
+        .replace(/<\/script\s*>$/i, "");
+      assert.doesNotThrow(() => JSON.parse(json), `${route}: valid JSON-LD`);
+      return JSON.parse(json);
+    });
+  const articles = structuredData.filter(data =>
+    array(data?.["@type"]).some(type =>
+      ["Article", "BlogPosting"].includes(type)
+    )
+  );
+  assert.equal(
+    articles.length,
+    entry ? 1 : 0,
+    `${route}: article schema only on published detail pages`
+  );
+  const articleMeta = property =>
+    tags.filter(
+      tag => tag.name === "meta" && tag.attributes.property === property
+    );
+  if (!entry) {
+    for (const property of [
+      "article:author",
+      "article:published_time",
+      "article:modified_time",
+    ])
+      assert.equal(
+        articleMeta(property).length,
+        0,
+        `${route}: no ${property} on non-article pages`
+      );
+    return;
+  }
+  assert.equal(structuredData.length, 1, `${route}: one article JSON-LD block`);
+  const data = articles[0];
+  const url = new URL(route, site).href;
+  const expectedMetadata = {
+    "@context": "https://schema.org",
+    "@type": entry.collection === "writing" ? "BlogPosting" : "Article",
+    url,
+    mainEntityOfPage: url,
+    headline: entry.data.title,
+    description: entry.data.description,
+    inLanguage: entry.data.lang ?? "en",
+    author: {
+      "@type": "Person",
+      name: "Junming Cao",
+      url: `${site}/`,
+    },
+  };
+  for (const [field, value] of Object.entries(expectedMetadata))
+    assert.deepEqual(
+      data[field],
+      value,
+      `${route}: structured ${field} matches content`
+    );
+  assert.equal(
+    articleMeta("article:author").length,
+    1,
+    `${route}: one article author`
+  );
+  assert.equal(
+    articleMeta("article:author")[0].attributes.content,
+    `${site}/`,
+    `${route}: article author URL`
+  );
+  for (const [field, schemaField, property] of [
+    ["publishedAt", "datePublished", "article:published_time"],
+    ["updatedAt", "dateModified", "article:modified_time"],
+  ]) {
+    const expected = entry.data[field]
+      ? new Date(entry.data[field]).toISOString()
+      : undefined;
+    assert.equal(
+      data[schemaField],
+      expected,
+      `${route}: ${schemaField} matches known content date`
+    );
+    const meta = articleMeta(property);
+    assert.equal(
+      meta.length,
+      expected ? 1 : 0,
+      `${route}: ${property} only when date is provided`
+    );
+    if (expected)
+      assert.equal(
+        meta[0].attributes.content,
+        expected,
+        `${route}: ${property} matches content date`
+      );
+  }
+}
+
 function assertOriginalSourceRendered(note, original, label) {
   const text = readableText(note);
   assert(
@@ -448,6 +548,21 @@ const disallowedText = [
 ];
 
 export async function validateSite() {
+  const [writing, projects] = await Promise.all([
+    publicContent("writing"),
+    publicContent("projects"),
+  ]);
+  const content = { writing, projects };
+  const articles = new Map(
+    Object.entries(content).flatMap(([collection, entries]) =>
+      entries
+        .filter(entry => entry.published)
+        .map(entry => [
+          `/${collection}/${entry.data.slug}/`,
+          { ...entry, collection },
+        ])
+    )
+  );
   const { pdfPath: cvPdfPath } = JSON.parse(
     await readFile(path.join(root, "src/data/cv.json"), "utf8")
   );
@@ -485,6 +600,7 @@ export async function validateSite() {
   let referenceCount = 0;
   for (const [filename, page] of pages) {
     const { html, tags, route } = page;
+    assertArticleMetadata(page, articles.get(route));
     if (route === "/cv/") {
       // Astro generates a minimal static redirect, not a career overview.
       assert(cvPdfPath, "Unexpected CV route without a configured PDF");
@@ -763,7 +879,6 @@ export async function validateSite() {
     }
   }
 
-  const writing = await publicContent("writing");
   const expectedWriting = writing.filter(entry => entry.published);
   const newestWriting = [...expectedWriting].sort(
     (a, b) => new Date(b.data.publishedAt) - new Date(a.data.publishedAt)
@@ -841,7 +956,7 @@ export async function validateSite() {
     }
   }
   for (const collection of ["writing", "projects"]) {
-    for (const entry of await publicContent(collection)) {
+    for (const entry of content[collection]) {
       const route = `/${collection}/${entry.data.slug}/`;
       if (!entry.published) {
         assert.equal(
