@@ -87,6 +87,19 @@ function fixture(collection, kind, { draft, date, omitDraft = false }) {
           '  publishedAt: "1999-06-01T00:00:00.000Z"',
         ]
       : []),
+    ...(collection === "writing" && kind === "merged"
+      ? [
+          "originalSources:",
+          "  - url: https://example.com/original-workflow",
+          "    title: Synthetic workflow article",
+          "    platform: WeChat",
+          '    publishedAt: "1998-05-12T00:00:00.000Z"',
+          "  - url: https://example.com/original-context",
+          "    title: Synthetic context article",
+          "    platform: WeChat",
+          '    publishedAt: "1999-06-01T00:00:00.000Z"',
+        ]
+      : []),
   ];
   const body = [
     "## Synthetic content",
@@ -151,6 +164,10 @@ async function main() {
       draft: false,
       date: "2000-01-02T00:00:00.000Z",
     }),
+    fixture("writing", "merged", {
+      draft: false,
+      date: "2000-01-03T00:00:00.000Z",
+    }),
     fixture("writing", "draft", {
       draft: true,
       date: "2000-01-02T00:00:00.000Z",
@@ -160,8 +177,8 @@ async function main() {
     fixture("projects", "draft", { draft: true }),
     fixture("projects", "future", { draft: false, date: future }),
   ];
-  const published = fixtures[0];
-  const excluded = fixtures.slice(1);
+  const published = fixtures.slice(0, 2);
+  const excluded = fixtures.slice(2);
   let primaryError;
   let cleanupError;
   try {
@@ -171,48 +188,53 @@ async function main() {
       createdFiles.push(entry.filename);
     }
     process.stdout.write(
-      "Building with synthetic published, draft, default-draft and future content.\n"
+      "Building with synthetic single-source and merged articles, draft, default-draft and future content.\n"
     );
     await build();
     if (interrupted) throw new Error("Publication test interrupted");
     await validateSite();
-    const output = await resolveOutput(published.route);
-    assert(output, "Published writing fixture has no route");
-    const html = await readFile(output, "utf8");
-    assert(html.includes(published.marker), "Published article body missing");
-    assert(/<table(?:\s|>)/.test(html), "Markdown table did not render");
-    assert(
-      /<pre(?:\s|>)/.test(html) && html.includes("wide-code-sample-"),
-      "Long code block did not render"
-    );
-    assert(
-      (await readFile(path.join(dist, "writing/index.html"), "utf8")).includes(
-        published.slug
-      ),
-      "Published article missing from writing listing"
-    );
     const sitemap = await readSitemap();
-    assert(
-      sitemap.has(new URL(published.route, site).href),
-      "Published article missing from sitemap"
-    );
     const fragments = await readPagefind();
-    assert(
-      fragments.some(
-        fragment =>
-          new URL(fragment.url, site).pathname === published.route &&
-          fragment.content.includes(published.marker)
-      ),
-      "Published article missing from actual search fragments"
+    const listing = await readFile(
+      path.join(dist, "writing/index.html"),
+      "utf8"
     );
-    for (const filename of ["rss.xml", "feed.xml"]) {
-      const { items } = await readFeed(filename);
+    for (const entry of published) {
+      const output = await resolveOutput(entry.route);
+      assert(output, `${entry.kind}: published writing fixture has no route`);
+      const html = await readFile(output, "utf8");
       assert(
-        items.some(
-          item => new URL(item.link, site).pathname === published.route
-        ),
-        `Published article missing from ${filename}`
+        html.includes(entry.marker),
+        `${entry.kind}: article body missing`
       );
+      assert(/<table(?:\s|>)/.test(html), "Markdown table did not render");
+      assert(
+        /<pre(?:\s|>)/.test(html) && html.includes("wide-code-sample-"),
+        "Long code block did not render"
+      );
+      assert(
+        listing.includes(entry.slug),
+        `${entry.kind}: published article missing from writing listing`
+      );
+      assert(
+        sitemap.has(new URL(entry.route, site).href),
+        `${entry.kind}: published article missing from sitemap`
+      );
+      assert(
+        fragments.some(
+          fragment =>
+            new URL(fragment.url, site).pathname === entry.route &&
+            fragment.content.includes(entry.marker)
+        ),
+        `${entry.kind}: published article missing from actual search fragments`
+      );
+      for (const filename of ["rss.xml", "feed.xml"]) {
+        const { items } = await readFeed(filename);
+        assert(
+          items.some(item => new URL(item.link, site).pathname === entry.route),
+          `${entry.kind}: published article missing from ${filename}`
+        );
+      }
     }
     for (const entry of excluded) {
       assert.equal(
@@ -261,7 +283,7 @@ async function main() {
     );
   }
   process.stdout.write(
-    "Publication checks passed: published content is discoverable; draft and future writing/projects are absent from HTML, RSS, sitemap and search. Clean output restored.\n"
+    "Publication checks passed: single-source and merged articles retain source attribution and are discoverable; draft and future writing/projects are absent from HTML, RSS, sitemap and search. Clean output restored.\n"
   );
 }
 

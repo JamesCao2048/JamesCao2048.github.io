@@ -10,6 +10,14 @@ const base = {
   publishedAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
 };
+const originalSource = z.object({
+  url: z.url().refine(value => /^https?:\/\//.test(value), {
+    message: "Original source must use an HTTP or HTTPS URL.",
+  }),
+  title: z.string().min(1),
+  platform: z.string().min(1),
+  publishedAt: z.coerce.date().optional(),
+});
 const projects = defineCollection({
   loader: glob({
     pattern: "**/[^_]*.{md,mdx}",
@@ -31,16 +39,11 @@ const writing = defineCollection({
       ...base,
       kind: z.enum(["article", "note"]).default("article"),
       syndicationUrl: z.url().optional(),
-      originalSource: z
-        .object({
-          url: z.url().refine(value => /^https?:\/\//.test(value), {
-            message: "Original source must use an HTTP or HTTPS URL.",
-          }),
-          title: z.string().min(1),
-          platform: z.string().min(1),
-          publishedAt: z.coerce.date().optional(),
-        })
-        .optional(),
+      originalSource: originalSource.optional(),
+      originalSources: z.array(originalSource).min(1).optional(),
+    })
+    .refine(data => !(data.originalSource && data.originalSources), {
+      message: "Use either originalSource or originalSources, not both.",
     })
     .refine(data => data.draft || !!data.publishedAt, {
       message: "Published writing needs its real publication date.",

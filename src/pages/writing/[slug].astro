@@ -64,6 +64,36 @@ const { Content } = await render(post);
         </p>
       )
     }
+    {
+      post.data.originalSources && (
+        <aside class="source-note" data-original-sources>
+          <p>
+            {post.data.originalSources.length > 1
+              ? "English adaptation combining multiple Chinese originals:"
+              : "English adaptation of the following Chinese original:"}
+          </p>
+          <ul>
+            {post.data.originalSources.map((source, index) => (
+              <li data-original-source>
+                <a href={source.url} title={source.title}>
+                  Chinese original {index + 1}
+                </a>{" "}
+                on {source.platform}
+                {source.publishedAt && (
+                  <>
+                    , originally published on{" "}
+                    <time datetime={source.publishedAt.toISOString()}>
+                      {formatDate(source.publishedAt)}
+                    </time>
+                  </>
+                )}
+                .
+              </li>
+            ))}
+          </ul>
+        </aside>
+      )
+    }
   </header>
   <article class="prose" lang={post.data.lang}><Content /></article>
   {
@@ -84,5 +114,10 @@ const { Content } = await render(post);
   }
   .source-note a {
     color: var(--link);
+  }
+  .source-note ul {
+    margin: 0.25rem 0 0;
+    padding-left: 1.25rem;
+    list-style: disc;
   }
 </style>
