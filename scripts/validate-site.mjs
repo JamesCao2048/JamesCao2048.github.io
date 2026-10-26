@@ -488,7 +488,6 @@ export function excludedRoute(url) {
 
 const legacyRoutes = [
   "/blog/",
-  "/blog/2021/mindspore1/",
   "/blog/2021/mindspore2/",
   "/blog/2021/mindspore3/",
   "/blog/2021/mindspore/2",
@@ -798,6 +797,11 @@ export async function validateSite() {
   ]) {
     assert(await resolveOutput(route), `Missing required route: ${route}`);
   }
+  assert.equal(
+    await resolveOutput("/blog/2021/mindspore1/"),
+    null,
+    "Deleted MindSpore article must not generate a retirement page"
+  );
   for (const [filename, expectedHash] of Object.entries(preservedPdfHashes)) {
     const buffer = await readFile(path.join(dist, "assets/pdf", filename));
     assert.equal(

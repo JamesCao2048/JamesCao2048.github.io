@@ -96,12 +96,6 @@
     "description": "Historical mistyped internal link to the second MindSpore article; provide the same retirement notice."
   },
   {
-    "path": "/blog/2021/mindspore1/",
-    "target": "/projects/",
-    "kind": "retired-blog",
-    "description": "Retired MindSpore article 1; present a clear retirement notice, not old article content."
-  },
-  {
     "path": "/blog/2021/mindspore2/",
     "target": "/projects/",
     "kind": "retired-blog",

@@ -60,6 +60,7 @@ This is Junming Cao's English personal website, built with Astro and AstroPaper.
 ## Workflow and checks
 
 - Keep stable slugs, preserved paper PDFs and legacy URL handling intact. Avoid reviving the deleted legacy blog content or a competing Jekyll build.
+- Exception confirmed on 2026-10-26: `/blog/2021/mindspore1/` is deleted entirely and must return HTTP 404, without a generated retirement notice.
 - Use Node 22.22.0 and pnpm 10.28.0 with the lockfile. `pnpm build` runs Astro checks, generates the site and builds search; `pnpm validate` verifies generated links, bibliography, PDF, feed and indexing. Run format/lint checks appropriate to changed files.
 - Run `pnpm test:publication` when publication filters, article metadata/source attribution, feeds or indexing behavior changes. It restores a clean build after synthetic fixtures; never leave test content in deployable output. Do not rerun it for every purely cosmetic label edit.
 - When changing search, run `pnpm test:search` against the completed build to exercise actual Pagefind records, category unions/isolation, and publication title/anchor matches. Verify the search interface's grouping and scope controls in an authorized local preview.
