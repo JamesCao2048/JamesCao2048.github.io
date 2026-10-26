@@ -23,7 +23,7 @@ runs **manually, from master only**. The validation workflow cannot publish.
 
 ## URL decisions
 
-The complete inventory is in [`src/data/legacy-routes.json`](src/data/legacy-routes.json).
+The inventory of retained legacy URLs is in [`src/data/legacy-routes.json`](src/data/legacy-routes.json).
 It is also the input for generated compatibility pages.
 
 - `/`, `/projects/`, and `/publications/` keep their established URLs.
@@ -32,8 +32,12 @@ It is also the input for generated compatibility pages.
   `/cv/` is an unindexed static meta-refresh compatibility redirect, not an HTML
   career overview. It is excluded from the sitemap and search. The PDF and these
   links are included in the static site.
-- `/blog/` and the three historical `/blog/2021/mindsporeN/` articles now have
-  retirement notices. Old post bodies and screenshots are removed as requested.
+- `/blog/` and the historical `/blog/2021/mindspore2/` and
+  `/blog/2021/mindspore3/` articles have retirement notices. Old post bodies and
+  screenshots are removed as requested.
+- `/blog/2021/mindspore1/` was fully removed at the owner's request on
+  October 26, 2026. Do not generate a retirement page for it; GitHub Pages
+  returns HTTP 404 using the site's error page.
 - The known broken `/blog/2021/mindspore/2` link receives the same notice.
 - Seven template posts, six template projects, three template announcements,
   and the template teaching page also receive retirement notices.
